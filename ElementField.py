@@ -160,7 +160,7 @@ class ComplianceTypeField(ElementField):
         return str(compliance_type.value)
 
 
-MANDATORY_FEILDS = (
+MANDATORY_FIELDS = (
     StringField("DCA", "jurisdiction_specific_vehicle_class", 6, Card.DRIVER_LICENSE),
     StringField("DCB", "jurisdiction_specific_restriction_codes", 12, Card.DRIVER_LICENSE),
     StringField("DCD", "jurisdiction_specific_endorsement_codes", 5, Card.DRIVER_LICENSE),
@@ -215,4 +215,4 @@ OPTIONAL_FIELDS = (
     BoolField("DDK", "organ_donor", **_opt),
     BoolField("DDL", "veteran_indicator", **_opt),)
 
-FIELDS = MANDATORY_FEILDS + OPTIONAL_FIELDS
+FIELDS = MANDATORY_FIELDS + OPTIONAL_FIELDS
