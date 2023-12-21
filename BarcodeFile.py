@@ -77,6 +77,11 @@ class SubfileElement:
     value: str
     
     def __init__(self, *args: str) -> None:
+        """Create a SubfileElement object
+        
+        __init__(_str: str)
+        __init__(code: str, value: str)
+        """
         if args:
             if len(args) == 1:
                 self.code, self.value = args[0][:3], args[0][3:]
