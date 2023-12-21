@@ -9,6 +9,7 @@ class Card(Enum):
 
 
 class Sex(Enum):
+    UNKNOWN = 0
     MALE = 1
     FEMALE = 2
     NOT_SPECIFIED = 9
