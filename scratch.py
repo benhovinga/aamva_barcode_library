@@ -1,4 +1,4 @@
-from example_data import barcode0, barcode1, barcode2
+from example_data import barcode0
 
 def decode_license(raw_string: str):
     def next_bytes(string: str, index: int, byte_len: int):
@@ -47,5 +47,3 @@ def decode_license(raw_string: str):
 
 from pprint import pprint
 pprint(decode_license(barcode0))
-pprint(decode_license(barcode1))
-pprint(decode_license(barcode2))

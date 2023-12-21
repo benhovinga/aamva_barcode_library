@@ -1,4 +1,4 @@
-from example_data import barcode1, barcode2
+from example_data import barcode0
 
 HEADER_LENGTH = 21
 
@@ -66,27 +66,18 @@ def parse_data_elements(subfile: Subfile):
     pass
 
 identification1 = dict()
-identification2 = dict()
 
 # Validation
-validate_header(barcode1)
-validate_header(barcode2)
+validate_header(barcode0)
 
 # Read Header
-header1: Header = read_header(barcode1)
-header2: Header = read_header(barcode2)
+header1: Header = read_header(barcode0)
 print(header1)
-print(header2)
 
 # Read all Subfile Designators
-sub_des1: SubfileDesignator = read_subfile_designators(barcode1, header1)
-sub_des2: SubfileDesignator = read_subfile_designators(barcode2, header2)
+sub_des1: SubfileDesignator = read_subfile_designators(barcode0, header1)
 print(sub_des1)
-print(sub_des2)
 
 # Read first subfile
-subfile1 = read_subfile(barcode1, header1, sub_des1[0])
-del barcode1, header1, sub_des1
-subfile2 = read_subfile(barcode2, header2, sub_des2[0])
+subfile1 = read_subfile(barcode0, header1, sub_des1[0])
 print(subfile1)
-print(subfile2)
