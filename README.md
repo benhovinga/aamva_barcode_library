@@ -16,8 +16,8 @@ Below are some resources that made creating this library possible.
 
 - [AAMVA 2020 DL/ID Card Design Standard](https://www.aamva.org/getmedia/99ac7057-0f4d-4461-b0a2-3a5532e1b35c/AAMVA-2020-DLID-Card-Design-Standard.pdf) (aamva.org)
     - Annex D - Mandatory PDF417 Bar Code
-    - The encoding scheme in Annex I (Optional Comact Encoding) is not yet implemented
-- [AAMVA D20 Data Dictionary 7.0](https://www.aamva.org/getmedia/4373f9e2-468b-4304-b0ee-12d7c867ad7e/D20-Data-Dictionary-7-0.pdf)
+    - _The encoding scheme in Annex I (Optional Comact Encoding) is not yet implemented_
+- [AAMVA D20 Data Dictionary 7.0](https://www.aamva.org/getmedia/4373f9e2-468b-4304-b0ee-12d7c867ad7e/D20-Data-Dictionary-7-0.pdf) (aamva.org)
     - A.9.2 Driver Eye Color
     - A.9.3 Driver Hair Color
     - A.9.8 Driver Race and Ethnicity
