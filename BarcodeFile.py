@@ -72,10 +72,27 @@ class FileHeader:
             str(self.number_of_entries).rjust(2, "0"))
 
 
+class SubfileElement:
+    code: str
+    value: str
+    
+    def __init__(self, *args: str) -> None:
+        if args:
+            if len(args) == 1:
+                self.code, self.value = args[0][:3], args[0][3:]
+            elif len(args) == 2:
+                self.code, self.value = args[0], args[1]
+        else:
+            raise IndexError("arguments out of range")
+    
+    def __str__(self) -> str:
+        return self.code + self.value
+
+
 @dataclass
 class Subfile:
     subfile_type: str
-    elements: list[str]
+    elements: list[SubfileElement]
     
     @classmethod
     def decode(cls, header: FileHeader, subfile_designator: SubfileDesignator, blob: str) -> Self:
