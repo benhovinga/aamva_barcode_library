@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from typing import Self
-from Utils import trim_to_indicator
 
 _HEADER_LENGTH = 21
 _DESIGNATOR_LENGTH = 10
@@ -103,10 +102,21 @@ class Subfile:
 class BarcodeFile:
     header: FileHeader
     subfiles: list[Subfile]
+    
+    @staticmethod
+    def trim_to_indicator(_str: str, indicator: str) -> str:
+        """Remove everything before the indicator"""
+        if _str[0] != indicator:
+            try:
+                index = _str.index(indicator)
+            except ValueError:
+                raise ValueError(f"Indicator \"{indicator}\" is missing")
+            _str = _str[index:]
+        return _str
 
     @classmethod
     def decode(cls, _str: str) -> Self:
-        blob = trim_to_indicator(_str, _COMPLIANCE_INDICATOR)
+        blob = cls.trim_to_indicator(_str, _COMPLIANCE_INDICATOR)
         header = FileHeader.decode(blob)
         for i in range(header.number_of_entries):
             header.subfile_designators.append(SubfileDesignator.decode(i, blob))
