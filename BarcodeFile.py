@@ -87,6 +87,9 @@ class SubfileElement:
     
     def __str__(self) -> str:
         return self.code + self.value
+    
+    def __repr__(self) -> str:
+        return(f"SubfileElement(code={self.code}, value={self.value})")
 
 
 @dataclass
@@ -104,14 +107,18 @@ class Subfile:
             raise Exception('Subfile missing segment terminator')
         return cls(
             subfile_designator.subfile_type,
-            list(filter(None,map(
-                lambda i: i.strip(),
-                blob[start + 2: end].split(header.data_element_separator)))))
+            list(map(
+                lambda i: SubfileElement(i),
+                filter(None,map(
+                    lambda i: i.strip(),
+                    blob[start + 2: end].split(header.data_element_separator))))))
     
     def encode(self, header: FileHeader) -> str:
         return str(
             self.subfile_type +
-            header.data_element_separator.join(self.elements) +
+            header.data_element_separator.join(map(
+                lambda i: str(i),
+                self.elements)) +
             header.segment_terminator)
 
 
