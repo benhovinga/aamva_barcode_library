@@ -1,12 +1,11 @@
-from enum import Enum
+from enum import Enum, Flag, auto
 from typing import Self
 
 
-class Card(Enum):
-    DRIVER_LICENSE = "DL"
-    IDENTIFICATION_CARD = "ID"
-    BOTH = DRIVER_LICENSE, IDENTIFICATION_CARD
-
+class Card(Flag):
+    DRIVER_LICENSE = auto()
+    IDENTIFICATION_CARD = auto()
+    BOTH = DRIVER_LICENSE | IDENTIFICATION_CARD
 
 class Sex(Enum):
     UNKNOWN = 0
