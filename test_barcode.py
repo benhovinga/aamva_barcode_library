@@ -60,7 +60,6 @@ ZVZVA01
         self.assertEqual(file_header.number_of_entries, 2)
     
     def test_read_subfile_designators(self):
-        file_header = barcode.read_file_header(self.example_file)
         designator = barcode.read_subfile_designator(self.example_file, 0)
 
         self.assertIsInstance(designator, barcode.SubfileDesignator)
