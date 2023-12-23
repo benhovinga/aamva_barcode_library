@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import datetime
 
-from Enums import Card, Sex, EyeColor, HairColor, HairColorD20, NameTruncation, WeightRange, RaceEthnicity, ComplianceType
+from old_stuff.Enums import Card, Sex, EyeColor, HairColor, HairColorD20, NameTruncation, WeightRange, RaceEthnicity, ComplianceType
 
 
 @dataclass(frozen=True)
