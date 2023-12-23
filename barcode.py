@@ -13,14 +13,12 @@ FileHeader = namedtuple("FileHeader", [
     "issuer_identification_number",
     "aamva_version_number",
     "jurisdiction_version_number",
-    "number_of_entries",
-])
+    "number_of_entries"])
 
 SubfileDesignator = namedtuple("SubfileDesignator", [
     "type",
     "offset",
-    "legth",
-])
+    "legth"])
 
 def trim_to_indicator(_str: str, indicator: str) -> str:
     """Remove everything before the indicator, moving the indicator to the begining of the string"""
