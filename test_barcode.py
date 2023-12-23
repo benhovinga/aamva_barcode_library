@@ -47,17 +47,16 @@ class TestBarcode(unittest.TestCase):
         file_header = barcode.read_file_header(SAMPLE_FILE)
         
         self.assertIsInstance(file_header, barcode.FileHeader)
-        self.assertEqual(file_header.compliance_indicator, "@")
         self.assertEqual(file_header.data_element_separator, "\n")
         self.assertEqual(file_header.record_separator, "")
         self.assertEqual(file_header.segment_terminator, "\n")
-        self.assertEqual(file_header.file_type, "ANSI ")
         self.assertEqual(file_header.aamva_version_number, 10)
         self.assertEqual(file_header.issuer_identification_number, 636000)
         self.assertEqual(file_header.jurisdiction_version_number, 0)
         self.assertEqual(file_header.number_of_entries, 2)
         
         self.assertRaises(ValueError, barcode.read_file_header, "this file is short")
+        self.assertRaises(ValueError, barcode.read_file_header, SAMPLE_FILE[1:])
         self.assertRaises(ValueError, barcode.read_file_header, SAMPLE_FILE.replace("ANSI ", "OOPS "))
     
     def test_read_subfile_designator(self):

@@ -5,11 +5,9 @@ COMPLIANCE_INDICATOR = "@"
 DESIGNATOR_LENGTH = 10
 
 FileHeader = namedtuple("FileHeader", [
-    "compliance_indicator",
     "data_element_separator",
     "record_separator",
     "segment_terminator",
-    "file_type",
     "issuer_identification_number",
     "aamva_version_number",
     "jurisdiction_version_number",
@@ -34,15 +32,13 @@ def read_file_header(file: str) -> FileHeader:
     if len(file) < HEADER_LENGTH:
         raise ValueError("file too short")
     elif file[0] != COMPLIANCE_INDICATOR:
-        file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
-    if file[4:9] != "ANSI ":
+        raise ValueError("file missing compliance indicator")
+    elif file[4:9] != "ANSI ":
         raise ValueError("file missing file type")
     return FileHeader(
-            compliance_indicator=           str(file[0]),
             data_element_separator=         str(file[1]),
             record_separator=               str(file[2]),
             segment_terminator=             str(file[3]),
-            file_type=                      str(file[4:9]),
             issuer_identification_number=   int(file[9:15]),
             aamva_version_number=           int(file[15:17]),
             jurisdiction_version_number=    int(file[17:19]),
