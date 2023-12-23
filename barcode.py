@@ -50,15 +50,9 @@ def read_file_header(file: str) -> FileHeader:
             jurisdiction_version_number=    int(file[17:19]),
             number_of_entries=              int(file[19:21]))
 
-def read_subfile_designators(file: str, file_header: FileHeader) -> tuple[SubfileDesignator]:
-    if file_header == 0:
-        raise ValueError("file has not subfiles")
-    designators = []
-    for i in range(file_header.number_of_entries):
-        cursor = i * DESIGNATOR_LENGTH + HEADER_LENGTH
-        designators.append(SubfileDesignator(
-            type=   str(file[cursor:cursor + 2]),
-            offset= int(file[cursor + 2:cursor + 6]),
-            legth=  int(file[cursor + 6:cursor + 10]),
-        ))
-    return tuple(designators)
+def read_subfile_designator(file: str, designator_index: int) -> SubfileDesignator:
+    cursor = designator_index * DESIGNATOR_LENGTH + HEADER_LENGTH
+    return SubfileDesignator(
+        type=   str(file[cursor:cursor + 2]),
+        offset= int(file[cursor + 2:cursor + 6]),
+        legth=  int(file[cursor + 6:cursor + 10]))
