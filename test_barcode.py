@@ -69,6 +69,21 @@ ZVZVA01
         self.assertTupleEqual(designator0, ("DL", 41, 276))
         self.assertTupleEqual(designator1, ("ZV", 318, 8))
 
+    def test_read_subfile(self):
+        subfile0 = barcode.read_subfile(self.example_file, "\n", "\n", "DL", 41, 276)
+        subfile1 = barcode.read_subfile(self.example_file, "\n", "\n", "ZV", 318, 8)
+        
+        self.assertIsInstance(subfile0, dict)
+        self.assertIsInstance(subfile1, dict)
+        
+        self.assertIn("DCS", subfile0)
+        self.assertIn("ZVA", subfile1)
+        
+        self.assertEqual(subfile0["_type"], "DL")
+        self.assertEqual(subfile1["_type"], "ZV")
+        
+        self.assertRaises(ValueError,barcode.read_subfile, self.example_file, "\n", "\n", "DL", 40, 276)
+        self.assertRaises(ValueError,barcode.read_subfile, self.example_file, "\n", "\n", "DL", 41, 275)
 
 if __name__ == "__main__":
     unittest.main()

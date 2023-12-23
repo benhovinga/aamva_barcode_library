@@ -54,3 +54,15 @@ def read_subfile_designator(file: str, designator_index: int) -> SubfileDesignat
         type=   str(file[cursor:cursor + 2]),
         offset= int(file[cursor + 2:cursor + 6]),
         legth=  int(file[cursor + 6:cursor + 10]))
+
+def read_subfile(file: str, segment_terminator: str, data_element_separator: str, subfile_type: str, offset: int, length: int) -> dict[str, str]:
+    end_offset = offset + length
+    if file[offset:offset + 2] != subfile_type:
+        raise ValueError("found subfile and designator type are not the same")
+    elif file[end_offset] != segment_terminator:
+        raise ValueError("subfile is missing segment terminator")
+    subfile = {"_type": subfile_type}
+    elements = file[offset + 2:end_offset].split(data_element_separator)
+    for item in elements:
+        subfile[item[:3]] = item[3:]
+    return subfile
