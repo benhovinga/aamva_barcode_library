@@ -36,7 +36,7 @@ ZVZVA01
 """
 
 
-class TestBarcode(unittest.TestCase):
+class BarcodeTestCase(unittest.TestCase):
     
     def test_trim_to_indicator(self):
         self.assertEqual(barcode.trim_to_indicator("@After Indicator", "@"), "@After Indicator")
