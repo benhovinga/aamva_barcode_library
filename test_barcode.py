@@ -89,5 +89,5 @@ class BarcodeTestCase(unittest.TestCase):
         self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 41, 275)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()
