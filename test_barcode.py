@@ -1,11 +1,7 @@
 import unittest
 import barcode
 
-
-class TestBarcode(unittest.TestCase):
-    
-    def setUp(self) -> None:
-        self.example_file = """@
+SAMPLE_FILE = """@
 
 ANSI 636000100002DL00410276ZV03180008DLDAQT64235789
 DCSSAMPLE
@@ -38,7 +34,9 @@ DDD1
 ZVZVA01
 
 """
-        return super().setUp()
+
+
+class TestBarcode(unittest.TestCase):
     
     def test_trim_to_indicator(self):
         self.assertEqual(barcode.trim_to_indicator("@After Indicator", "@"), "@After Indicator")
@@ -46,7 +44,7 @@ ZVZVA01
         self.assertRaises(ValueError, barcode.trim_to_indicator, "no indicator", "@")
     
     def test_read_file_header(self):
-        file_header = barcode.read_file_header(self.example_file)
+        file_header = barcode.read_file_header(SAMPLE_FILE)
         
         self.assertIsInstance(file_header, barcode.FileHeader)
         self.assertEqual(file_header.compliance_indicator, "@")
@@ -60,8 +58,8 @@ ZVZVA01
         self.assertEqual(file_header.number_of_entries, 2)
     
     def test_read_subfile_designator(self):
-        designator0 = barcode.read_subfile_designator(self.example_file, 0)
-        designator1 = barcode.read_subfile_designator(self.example_file, 1)
+        designator0 = barcode.read_subfile_designator(SAMPLE_FILE, 0)
+        designator1 = barcode.read_subfile_designator(SAMPLE_FILE, 1)
 
         self.assertIsInstance(designator0, barcode.SubfileDesignator)
         self.assertIsInstance(designator1, barcode.SubfileDesignator)
@@ -70,8 +68,8 @@ ZVZVA01
         self.assertTupleEqual(designator1, ("ZV", 318, 8))
 
     def test_read_subfile(self):
-        subfile0 = barcode.read_subfile(self.example_file, "\n", "\n", "DL", 41, 276)
-        subfile1 = barcode.read_subfile(self.example_file, "\n", "\n", "ZV", 318, 8)
+        subfile0 = barcode.read_subfile(SAMPLE_FILE, "\n", "\n", "DL", 41, 276)
+        subfile1 = barcode.read_subfile(SAMPLE_FILE, "\n", "\n", "ZV", 318, 8)
         
         self.assertIsInstance(subfile0, dict)
         self.assertIsInstance(subfile1, dict)
@@ -82,8 +80,9 @@ ZVZVA01
         self.assertEqual(subfile0["_type"], "DL")
         self.assertEqual(subfile1["_type"], "ZV")
         
-        self.assertRaises(ValueError,barcode.read_subfile, self.example_file, "\n", "\n", "DL", 40, 276)
-        self.assertRaises(ValueError,barcode.read_subfile, self.example_file, "\n", "\n", "DL", 41, 275)
+        self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 40, 276)
+        self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 41, 275)
+
 
 if __name__ == "__main__":
     unittest.main()
