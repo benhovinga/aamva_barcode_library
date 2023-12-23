@@ -58,6 +58,15 @@ ZVZVA01
         self.assertEqual(file_header.issuer_identification_number, 636000)
         self.assertEqual(file_header.jurisdiction_version_number, 0)
         self.assertEqual(file_header.number_of_entries, 2)
+    
+    def test_read_subfile_designators(self):
+        file_header = barcode.read_file_header(self.example_file)
+        subfile_designators = barcode.read_subfile_designators(self.example_file, file_header)
+        
+        self.assertIsInstance(subfile_designators, tuple)
+        self.assertIsInstance(subfile_designators[0], barcode.SubfileDesignator)
+        self.assertIsInstance(subfile_designators[1], barcode.SubfileDesignator)
+        self.assertTupleEqual(subfile_designators, (("DL", 41, 276), ("ZV", 318, 8)))
 
 
 if __name__ == "__main__":

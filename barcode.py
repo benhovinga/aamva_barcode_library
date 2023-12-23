@@ -2,6 +2,7 @@ from collections import namedtuple
 
 HEADER_LENGTH = 21
 COMPLIANCE_INDICATOR = "@"
+DESIGNATOR_LENGTH = 10
 
 FileHeader = namedtuple("FileHeader", [
     "compliance_indicator",
@@ -13,6 +14,12 @@ FileHeader = namedtuple("FileHeader", [
     "aamva_version_number",
     "jurisdiction_version_number",
     "number_of_entries",
+])
+
+SubfileDesignator = namedtuple("SubfileDesignator", [
+    "type",
+    "offset",
+    "legth",
 ])
 
 def trim_to_indicator(_str: str, indicator: str) -> str:
@@ -42,3 +49,16 @@ def read_file_header(file: str) -> FileHeader:
             aamva_version_number=           int(file[15:17]),
             jurisdiction_version_number=    int(file[17:19]),
             number_of_entries=              int(file[19:21]))
+
+def read_subfile_designators(file: str, file_header: FileHeader) -> tuple[SubfileDesignator]:
+    if file_header == 0:
+        raise ValueError("file has not subfiles")
+    designators = []
+    for i in range(file_header.number_of_entries):
+        cursor = i * DESIGNATOR_LENGTH + HEADER_LENGTH
+        designators.append(SubfileDesignator(
+            type=   str(file[cursor:cursor + 2]),
+            offset= int(file[cursor + 2:cursor + 6]),
+            legth=  int(file[cursor + 6:cursor + 10]),
+        ))
+    return tuple(designators)
