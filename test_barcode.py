@@ -59,7 +59,7 @@ ZVZVA01
         self.assertEqual(file_header.jurisdiction_version_number, 0)
         self.assertEqual(file_header.number_of_entries, 2)
     
-    def test_read_subfile_designators(self):
+    def test_read_subfile_designator(self):
         designator = barcode.read_subfile_designator(self.example_file, 0)
 
         self.assertIsInstance(designator, barcode.SubfileDesignator)
