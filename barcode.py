@@ -62,7 +62,7 @@ def read_subfile(file: str, segment_terminator: str, data_element_separator: str
     elif file[end_offset] != segment_terminator:
         raise ValueError("subfile is missing segment terminator")
     subfile = {"_type": subfile_type}
-    elements = file[offset + 2:end_offset].split(data_element_separator)
+    elements = filter(None, file[offset + 2:end_offset].split(data_element_separator))
     for item in elements:
         subfile[item[:3]] = item[3:]
     return subfile

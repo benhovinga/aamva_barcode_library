@@ -80,6 +80,9 @@ class TestBarcode(unittest.TestCase):
         self.assertIn("DCS", subfile0)
         self.assertIn("ZVA", subfile1)
         
+        self.assertNotIn("", subfile0)
+        self.assertNotIn("", subfile1)
+        
         self.assertEqual(subfile0["_type"], "DL")
         self.assertEqual(subfile1["_type"], "ZV")
         
