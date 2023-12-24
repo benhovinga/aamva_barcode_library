@@ -89,11 +89,12 @@ class BarcodeTestCase(unittest.TestCase):
         self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 41, 275)
 
     def test_read_file(self):
-        file = barcode.read_file(SAMPLE_FILE)
+        file = barcode.read_file("garbage" + SAMPLE_FILE + "garbage")
         
         self.assertIsInstance(file, barcode.File)
         self.assertIsInstance(file[0], barcode.FileHeader)
         self.assertIsInstance(file[1], dict)
+        self.assertEqual(len(file.elements), 30)
         self.assertEqual(file.elements["_type"], ["DL", "ZV"])
         self.assertEqual(file.elements["DCS"], "SAMPLE")
         self.assertEqual(file.elements["ZVA"], "01")

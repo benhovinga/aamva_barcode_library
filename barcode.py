@@ -68,6 +68,7 @@ def read_subfile(file: str, segment_terminator: str, data_element_separator: str
     return subfile
 
 def read_file(file: str) -> File:
+    file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     header = read_file_header(file)
     if header.number_of_entries < 1:
         raise ValueError("number of entries cannot be less than 1")
