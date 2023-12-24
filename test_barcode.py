@@ -88,6 +88,18 @@ class BarcodeTestCase(unittest.TestCase):
         self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 40, 276)
         self.assertRaises(ValueError,barcode.read_subfile, SAMPLE_FILE, "\n", "\n", "DL", 41, 275)
 
+    def test_read_file(self):
+        file = barcode.read_file(SAMPLE_FILE)
+        
+        self.assertIsInstance(file, barcode.File)
+        self.assertIsInstance(file[0], barcode.FileHeader)
+        self.assertIsInstance(file[1], dict)
+        self.assertEqual(file.elements["_type"], ["DL", "ZV"])
+        self.assertEqual(file.elements["DCS"], "SAMPLE")
+        self.assertEqual(file.elements["ZVA"], "01")
+        
+        self.assertRaises(ValueError, barcode.read_file, "@\n\n\nANSI 636000100000")
+
 
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()

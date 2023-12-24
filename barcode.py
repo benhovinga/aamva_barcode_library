@@ -18,6 +18,10 @@ SubfileDesignator = namedtuple("SubfileDesignator", [
     "offset",
     "legth"])
 
+File = namedtuple("File", [
+    "header",
+    "elements"])
+
 def trim_to_indicator(_str: str, indicator: str) -> str:
     """Remove everything before the indicator, moving the indicator to the begining of the string"""
     if _str[0] != indicator:
@@ -62,3 +66,15 @@ def read_subfile(file: str, segment_terminator: str, data_element_separator: str
     for item in elements:
         subfile[item[:3]] = item[3:]
     return subfile
+
+def read_file(file: str) -> File:
+    header = read_file_header(file)
+    if header.number_of_entries < 1:
+        raise ValueError("number of entries cannot be less than 1")
+    elements = {"_type": []}
+    for i in range(header.number_of_entries):
+        designator = read_subfile_designator(file, i)
+        subfile = read_subfile(file, header.segment_terminator, header.data_element_separator, *designator)
+        elements["_type"].append(subfile.pop("_type"))
+        elements.update(subfile)
+    return File(header, elements)
