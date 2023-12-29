@@ -1,8 +1,6 @@
 import unittest
 import barcode
-import example_data
-
-SAMPLE_FILE = example_data.BARCODE_0
+from example_data import SAMPLE_BARCODE
 
 
 class BarcodeTestCase(unittest.TestCase):
