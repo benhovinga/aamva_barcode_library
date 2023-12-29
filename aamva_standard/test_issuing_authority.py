@@ -11,15 +11,14 @@ def authority_list():
 
 
 @pytest.fixture
-def change_authority_list(authority_list):
+def fake_authority_list(authority_list):
     saved_list = issuing_authority.ISSUING_AUTHORITIES
     issuing_authority.ISSUING_AUTHORITIES = authority_list
-    print("Hello")
     yield None
     issuing_authority.ISSUING_AUTHORITIES = saved_list
 
 
-def test_can_get_authority_by_id(change_authority_list, authority_list):
+def test_can_get_authority_by_id(fake_authority_list, authority_list):
     assert issuing_authority.get_authority_by_id(100001) == authority_list[0]
     assert issuing_authority.get_authority_by_id(100002) == authority_list[1]
     with pytest.raises(KeyError, match="not found"):
