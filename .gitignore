@@ -5,3 +5,4 @@ htmlcov
 .DS_Store
 .vscode
 _old_stuff
+.pytest_cache
