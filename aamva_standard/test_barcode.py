@@ -106,7 +106,7 @@ testdata = (
 
 @pytest.mark.parametrize("version, expects", ((1, 19), (2, 21)), ids=("AAMVA Version 1", "AAMVA Version 2+"))
 def test_header_length_lambda_function(version, expects):
-    assert barcode.HEADER_LENGTH(version) == expects
+    assert barcode.header_length(version) == expects
 
 
 def test_can_trim_to_indicator():

@@ -1,6 +1,9 @@
 COMPLIANCE_INDICATOR = "@"
 DESIGNATOR_LENGTH = 10
-HEADER_LENGTH = lambda version: 19 if version < 2 else 21
+
+
+def header_length(version: int) -> int:
+    return 19 if version < 2 else 21
 
 
 def trim_to_indicator(_str: str, indicator: str) -> str:
@@ -35,7 +38,7 @@ def read_file_header(file: str) -> dict[str, int | str]:
 
 def read_subfile_designator(file: str, aamva_version_number: int, designator_index: int) -> tuple[str, int, int]:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
-    cursor = designator_index * DESIGNATOR_LENGTH + HEADER_LENGTH(aamva_version_number)
+    cursor = designator_index * DESIGNATOR_LENGTH + header_length(aamva_version_number)
     return (str(file[cursor:cursor + 2]), int(file[cursor + 2:cursor + 6]), int(file[cursor + 6:cursor + 10]))
 
 
