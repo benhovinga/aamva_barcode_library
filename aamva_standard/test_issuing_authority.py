@@ -5,8 +5,10 @@ import issuing_authority
 @pytest.fixture
 def issuing_authorities_testdata():
     return (
-        issuing_authority.IssuingAuthority(100001, "Test Jurisdiction 1", "T1", "Canada"),
-        issuing_authority.IssuingAuthority(100002, "Test Jurisdiction 2", "T2", "USA")
+        issuing_authority.IssuingAuthority(
+            100001, "Test Jurisdiction 1", "T1", "Canada"),
+        issuing_authority.IssuingAuthority(
+            100002, "Test Jurisdiction 2", "T2", "USA")
     )
 
 
