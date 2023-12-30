@@ -10,6 +10,7 @@ class IssuingAuthority:
 
 
 ISSUING_AUTHORITIES = (
+    # Source: https://www.aamva.org/identity/issuer-identification-numbers-(iin)
     IssuingAuthority(604426, "Prince Edward Island", "PE", "Canada"),
     IssuingAuthority(604427, "American Samoa", "AS", "USA"),
     IssuingAuthority(604428, "Quebec", "GC", "Canada"),
@@ -83,7 +84,6 @@ ISSUING_AUTHORITIES = (
     IssuingAuthority(636061, "West Virginia", "WV", "USA"),
     IssuingAuthority(636062, "Virgin Islands", "VI", "USA"),
 )
-"""Source: https://www.aamva.org/identity/issuer-identification-numbers-(iin)"""
 
 
 def get_authority_by_id(id_number: int) -> IssuingAuthority:
