@@ -161,4 +161,3 @@ def test_can_read_file(test_string, _, expects):
 def test_read_file_raises_number_of_entries_cannot_be_less_than_1():
     with pytest.raises(ValueError, match="number of entries cannot be less than 1"):
         barcode.read_file("@\n\x1e\rANSI 6360000100")
-
