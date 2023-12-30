@@ -89,7 +89,10 @@ ISSUING_AUTHORITIES = (
 
 def get_authority_by_id(id_number: int) -> IssuingAuthority:
     try:
-        _map = tuple(filter(lambda i: i.issuer_identification_number == id_number, ISSUING_AUTHORITIES))[0]
+        issuing_authority = tuple(
+            filter(
+                lambda i: i.issuer_identification_number == id_number,
+                ISSUING_AUTHORITIES))[0]
     except IndexError:
         raise KeyError(f"id_number: {id_number}, not found")
-    return _map
+    return issuing_authority
