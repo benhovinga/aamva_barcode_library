@@ -20,8 +20,11 @@ def fake_authority_list(issuing_authorities_testdata):
     issuing_authority.ISSUING_AUTHORITIES = saved_authorities
 
 
-def test_get_authority_by_id(fake_authority_list, issuing_authorities_testdata):
-    assert issuing_authority.get_authority_by_id(100001) == issuing_authorities_testdata[0]
-    assert issuing_authority.get_authority_by_id(100002) == issuing_authorities_testdata[1]
+def test_get_authority_by_id(
+        fake_authority_list, issuing_authorities_testdata):
+    assert (issuing_authority.get_authority_by_id(100001) ==
+            issuing_authorities_testdata[0])
+    assert (issuing_authority.get_authority_by_id(100002) ==
+            issuing_authorities_testdata[1])
     with pytest.raises(KeyError, match="not found"):
         issuing_authority.get_authority_by_id(1)
