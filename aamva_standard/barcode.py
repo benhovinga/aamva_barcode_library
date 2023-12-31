@@ -16,7 +16,7 @@ def trim_to_indicator(_str: str, indicator: str) -> str:
     return _str
 
 
-def read_file_header(file: str) -> dict[str, "int | str"]:
+def read_file_header(file: str) -> dict:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     if file[4:9] != "ANSI ":
         raise ValueError(f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
@@ -36,13 +36,13 @@ def read_file_header(file: str) -> dict[str, "int | str"]:
     return header
 
 
-def read_subfile_designator(file: str, aamva_version_number: int, designator_index: int) -> tuple[str, int, int]:
+def read_subfile_designator(file: str, aamva_version_number: int, designator_index: int) -> tuple:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     cursor = designator_index * DESIGNATOR_LENGTH + header_length(aamva_version_number)
     return (str(file[cursor:cursor + 2]), int(file[cursor + 2:cursor + 6]), int(file[cursor + 6:cursor + 10]))
 
 
-def read_subfile(file: str, data_element_separator: str, segment_terminator: str, subfile_type: str, offset: int, length: int) -> dict[str, str]:
+def read_subfile(file: str, data_element_separator: str, segment_terminator: str, subfile_type: str, offset: int, length: int) -> dict:
     end_offset = offset + length - 1
     if file[offset:offset + 2] != subfile_type:
         raise ValueError(f"Subfile is missing subfile type {ascii(file[offset:offset + 2])} != {ascii(subfile_type)}")
@@ -56,7 +56,7 @@ def read_subfile(file: str, data_element_separator: str, segment_terminator: str
     return subfile
 
 
-def read_file(file: str) -> dict[str, dict[str, str]]:
+def read_file(file: str) -> dict:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     header = read_file_header(file)
     if header["number_of_entries"] < 1:
