@@ -16,7 +16,7 @@ def trim_to_indicator(_str: str, indicator: str) -> str:
     return _str
 
 
-def read_file_header(file: str) -> dict[str, int | str]:
+def read_file_header(file: str) -> dict[str, "int | str"]:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     if file[4:9] != "ANSI ":
         raise ValueError(f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
