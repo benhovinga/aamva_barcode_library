@@ -113,7 +113,10 @@ testdata = (
 )
 
 
-@pytest.mark.parametrize("version, expects", ((1, 19), (2, 21)), ids=("AAMVA Version 1", "AAMVA Version 2+"))
+@pytest.mark.parametrize(
+    "version, expects",
+    ((1, 19), (2, 21)),
+    ids=("AAMVA Version 1", "AAMVA Version 2+"))
 def test_header_length_lambda_function(version, expects):
     assert barcode.header_length(version) == expects
 
@@ -138,28 +141,53 @@ def test_read_file_header_raises_file_type_missing():
         barcode.read_file_header("@\n\x1e\rLLLL 999999100201")
 
 
-@pytest.mark.parametrize("test_string, designators, expects", testdata, ids=testdata_ids)
+@pytest.mark.parametrize(
+    "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile_designator(test_string, designators, expects):
     for index, designator in enumerate(designators):
-        assert barcode.read_subfile_designator(test_string, expects["header"]["aamva_version_number"], index) == designator
+        assert barcode.read_subfile_designator(
+            test_string,
+            expects["header"]["aamva_version_number"],
+            index) == designator
 
 
-@pytest.mark.parametrize("test_string, designators, expects", testdata, ids=testdata_ids)
+@pytest.mark.parametrize(
+    "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile(test_string, designators, expects):
-    assert barcode.read_subfile(test_string, expects["header"]["data_element_separator"], expects["header"]["segment_terminator"], *designators[0]) == expects["subfiles"]["DL"]
-    assert barcode.read_subfile(test_string, expects["header"]["data_element_separator"], expects["header"]["segment_terminator"], *designators[1]) == expects["subfiles"]["ZV"]
+    assert barcode.read_subfile(
+        test_string,
+        expects["header"]["data_element_separator"],
+        expects["header"]["segment_terminator"],
+        *designators[0]) == expects["subfiles"]["DL"]
+    assert barcode.read_subfile(
+        test_string,
+        expects["header"]["data_element_separator"],
+        expects["header"]["segment_terminator"],
+        *designators[1]) == expects["subfiles"]["ZV"]
 
 
-@pytest.mark.parametrize("test_string, designators, expects", testdata, ids=testdata_ids)
-def test_read_subfile_raises_missing_subfile_type(test_string, designators, expects):
+@pytest.mark.parametrize(
+    "test_string, designators, expects", testdata, ids=testdata_ids)
+def test_read_subfile_raises_missing_subfile_type(
+        test_string, designators, expects):
     with pytest.raises(ValueError, match="missing subfile type"):
-        barcode.read_subfile(test_string, expects["header"]["data_element_separator"], expects["header"]["segment_terminator"], designators[0][0], designators[0][1] - 1, designators[0][2])
+        barcode.read_subfile(
+            test_string,
+            expects["header"]["data_element_separator"],
+            expects["header"]["segment_terminator"],
+            designators[0][0], designators[0][1] - 1, designators[0][2])
 
 
-@pytest.mark.parametrize("test_string, designators, expects", testdata, ids=testdata_ids)
-def test_read_subfile_raises_missing_segment_terminator(test_string, designators, expects):
+@pytest.mark.parametrize(
+    "test_string, designators, expects", testdata, ids=testdata_ids)
+def test_read_subfile_raises_missing_segment_terminator(
+        test_string, designators, expects):
     with pytest.raises(ValueError, match="missing segment terminator"):
-        barcode.read_subfile(test_string, expects["header"]["data_element_separator"], expects["header"]["segment_terminator"], designators[0][0], designators[0][1], designators[0][2] - 1)
+        barcode.read_subfile(
+            test_string,
+            expects["header"]["data_element_separator"],
+            expects["header"]["segment_terminator"],
+            designators[0][0], designators[0][1], designators[0][2] - 1)
 
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
@@ -168,5 +196,7 @@ def test_can_read_file(test_string, _, expects):
 
 
 def test_read_file_raises_number_of_entries_cannot_be_less_than_1():
-    with pytest.raises(ValueError, match="number of entries cannot be less than 1"):
+    with pytest.raises(
+            ValueError,
+            match="number of entries cannot be less than 1"):
         barcode.read_file("@\n\x1e\rANSI 6360000100")
