@@ -19,7 +19,8 @@ def trim_to_indicator(_str: str, indicator: str) -> str:
 def read_file_header(file: str) -> dict:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     if file[4:9] != "ANSI ":
-        raise ValueError(f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
+        raise ValueError(
+            f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
     header = dict(
         data_element_separator=str(file[1]),
         record_separator=str(file[2]),
@@ -36,18 +37,35 @@ def read_file_header(file: str) -> dict:
     return header
 
 
-def read_subfile_designator(file: str, aamva_version_number: int, designator_index: int) -> tuple:
+def read_subfile_designator(
+        file: str,
+        aamva_version_number: int,
+        designator_index: int) -> tuple:
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
-    cursor = designator_index * DESIGNATOR_LENGTH + header_length(aamva_version_number)
-    return (str(file[cursor:cursor + 2]), int(file[cursor + 2:cursor + 6]), int(file[cursor + 6:cursor + 10]))
+    cursor = designator_index * DESIGNATOR_LENGTH + \
+        header_length(aamva_version_number)
+    return (
+        str(file[cursor:cursor + 2]),
+        int(file[cursor + 2:cursor + 6]),
+        int(file[cursor + 6:cursor + 10]))
 
 
-def read_subfile(file: str, data_element_separator: str, segment_terminator: str, subfile_type: str, offset: int, length: int) -> dict:
+def read_subfile(
+        file: str,
+        data_element_separator: str,
+        segment_terminator: str,
+        subfile_type: str,
+        offset: int,
+        length: int) -> dict:
     end_offset = offset + length - 1
     if file[offset:offset + 2] != subfile_type:
-        raise ValueError(f"Subfile is missing subfile type {ascii(file[offset:offset + 2])} != {ascii(subfile_type)}")
+        raise ValueError(
+            f"Subfile is missing subfile type {ascii(file[offset:offset + 2])}\
+                != {ascii(subfile_type)}")
     elif file[end_offset] != segment_terminator:
-        raise ValueError(f"Subfile is missing segment terminator {ascii(file[end_offset])} != {ascii(segment_terminator)}")
+        raise ValueError(
+            f"Subfile is missing segment terminator {ascii(file[end_offset])} \
+                != {ascii(segment_terminator)}")
     subfile = {}
     elements = filter(
         None, file[offset + 2:end_offset].split(data_element_separator))
@@ -63,8 +81,13 @@ def read_file(file: str) -> dict:
         raise ValueError("number of entries cannot be less than 1")
     subfiles = {}
     for i in range(header["number_of_entries"]):
-        designator = read_subfile_designator(file, header["aamva_version_number"], i)
-        subfiles[designator[0]] = read_subfile(file, header["data_element_separator"], header["segment_terminator"], *designator)
+        designator = read_subfile_designator(
+            file, header["aamva_version_number"], i)
+        subfiles[designator[0]] = read_subfile(
+            file,
+            header["data_element_separator"],
+            header["segment_terminator"],
+            *designator)
     return {
         "header": header,
         "subfiles": subfiles
