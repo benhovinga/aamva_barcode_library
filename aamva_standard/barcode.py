@@ -1,5 +1,4 @@
 COMPLIANCE_INDICATOR = "@"
-DESIGNATOR_LENGTH = 10
 
 
 def header_length(version: int) -> int:
@@ -42,8 +41,9 @@ def read_subfile_designator(
         file: str,
         aamva_version_number: int,
         designator_index: int) -> tuple:
+    DESIGNATOR_LEGNTH = 10
     file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
-    cursor = designator_index * DESIGNATOR_LENGTH + \
+    cursor = designator_index * DESIGNATOR_LEGNTH + \
         header_length(aamva_version_number)
     return (
         str(file[cursor:cursor + 2]),
