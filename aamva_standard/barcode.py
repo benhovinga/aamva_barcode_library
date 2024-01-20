@@ -17,7 +17,6 @@ def trim_to_indicator(_str: str, indicator: str) -> str:
 
 
 def read_file_header(file: str) -> dict:
-    file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     if file[4:9] != "ANSI ":
         raise ValueError(
             f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
@@ -42,7 +41,6 @@ def read_subfile_designator(
         aamva_version_number: int,
         designator_index: int) -> tuple:
     DESIGNATOR_LEGNTH = 10
-    file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
     cursor = designator_index * DESIGNATOR_LEGNTH + \
         header_length(aamva_version_number)
     return (
