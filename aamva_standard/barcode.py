@@ -7,6 +7,7 @@ def header_length(version: int) -> int:
 
 
 def trim_to_indicator(_str: str, indicator: str) -> str:
+    """Removes all characters before the indicator in a string"""
     if _str[0] != indicator:
         try:
             index = _str.index(indicator)
