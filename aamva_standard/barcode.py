@@ -6,7 +6,7 @@ def header_length(version: int) -> int:
     return 19 if version < 2 else 21
 
 
-def trim_to_indicator(_str: str, indicator: str) -> str:
+def remove_all_before(_str: str, indicator: str) -> str:
     """Removes all characters before the indicator in a string"""
     if _str[0] != indicator:
         try:
@@ -75,7 +75,7 @@ def read_subfile(
 
 
 def read_file(file: str) -> dict:
-    file = trim_to_indicator(file, COMPLIANCE_INDICATOR)
+    file = remove_all_before(file, COMPLIANCE_INDICATOR)
     header = read_file_header(file)
     if header["number_of_entries"] < 1:
         raise ValueError("number of entries cannot be less than 1")
