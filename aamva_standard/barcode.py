@@ -3,7 +3,7 @@ DESIGNATOR_LENGTH = 10
 
 
 def header_length(version: int) -> int:
-    """Returns the fixed header length based on the version"""
+    """Returns the header length for the given version"""
     return 19 if version < 2 else 21
 
 
