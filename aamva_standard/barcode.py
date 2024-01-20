@@ -1,3 +1,8 @@
+"""
+The barcode module parses identification card barcode data into python objects
+"""
+
+
 def header_length(version: int) -> int:
     """Returns the header length for the given version"""
     return 19 if version < 2 else 21
