@@ -15,7 +15,16 @@ def header_length(version: int) -> int:
 
 
 def remove_all_before(_str: str, indicator: str) -> str:
-    """Removes all characters before the indicator in a string"""
+    """
+    Removes all characters before the indicator in a string
+    
+    Example:
+    
+    remove_all_before("abc@123", "@")
+    returns: "@123"
+    
+    Raises a ValueError if the indicator is not found in the string.
+    """
     if _str[0] != indicator:
         try:
             index = _str.index(indicator)
