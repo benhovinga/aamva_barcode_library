@@ -1,6 +1,3 @@
-COMPLIANCE_INDICATOR = "@"
-
-
 def header_length(version: int) -> int:
     """Returns the header length for the given version"""
     return 19 if version < 2 else 21
@@ -75,7 +72,7 @@ def read_subfile(
 
 
 def read_file(file: str) -> dict:
-    file = remove_all_before(file, COMPLIANCE_INDICATOR)
+    file = remove_all_before(file, "@")
     header = read_file_header(file)
     if header["number_of_entries"] < 1:
         raise ValueError("number of entries cannot be less than 1")
