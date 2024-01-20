@@ -14,7 +14,7 @@ def remove_all_before(_str: str, indicator: str) -> str:
     return _str
 
 
-def read_file_header(file: str) -> dict:
+def parse_file_header(file: str) -> dict:
     if file[4:9] != "ANSI ":
         raise ValueError(
             f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
@@ -34,7 +34,7 @@ def read_file_header(file: str) -> dict:
     return header
 
 
-def read_subfile_designator(
+def parse_subfile_designator(
         file: str,
         aamva_version_number: int,
         designator_index: int) -> tuple:
@@ -47,7 +47,7 @@ def read_subfile_designator(
         int(file[cursor + 6:cursor + 10]))
 
 
-def read_subfile(
+def parse_subfile(
         file: str,
         data_element_separator: str,
         segment_terminator: str,
@@ -71,16 +71,16 @@ def read_subfile(
     return subfile
 
 
-def read_file(file: str) -> dict:
+def parse_file(file: str) -> dict:
     file = remove_all_before(file, "@")
-    header = read_file_header(file)
+    header = parse_file_header(file)
     if header["number_of_entries"] < 1:
         raise ValueError("number of entries cannot be less than 1")
     subfiles = {}
     for i in range(header["number_of_entries"]):
-        designator = read_subfile_designator(
+        designator = parse_subfile_designator(
             file, header["aamva_version_number"], i)
-        subfiles[designator[0]] = read_subfile(
+        subfiles[designator[0]] = parse_subfile(
             file,
             header["data_element_separator"],
             header["segment_terminator"],
