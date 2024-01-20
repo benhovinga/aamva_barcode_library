@@ -4,7 +4,13 @@ The barcode module parses identification card barcode data into python objects
 
 
 def header_length(version: int) -> int:
-    """Returns the header length for the given version"""
+    """
+    Returns the header length for the given version
+    
+    In version 2 of the AAMVA ID/DL standards a 2 byte jurisdiction version was
+    added to the header of the file. This change increased the total size of
+    the header from 19 bytes to 21 bytes.
+    """
     return 19 if version < 2 else 21
 
 
