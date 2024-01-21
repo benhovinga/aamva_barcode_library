@@ -14,7 +14,7 @@ ISSUING_AUTHORITIES = (
     # https://www.aamva.org/identity/issuer-identification-numbers-(iin)
     IssuingAuthority(604426, "Prince Edward Island", "PE", "Canada"),
     IssuingAuthority(604427, "American Samoa", "AS", "USA"),
-    IssuingAuthority(604428, "Quebec", "GC", "Canada"),
+    IssuingAuthority(604428, "Quebec", "QC", "Canada"),
     IssuingAuthority(604429, "Yukon", "YT", "Canada"),
     IssuingAuthority(604430, "Norther Marianna Islands", "MP", "USA"),
     IssuingAuthority(604431, "Puerto Rico", "PR", "USA"),
