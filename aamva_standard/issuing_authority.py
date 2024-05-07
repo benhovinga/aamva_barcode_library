@@ -10,8 +10,9 @@ class IssuingAuthority:
 
 
 ISSUING_AUTHORITIES = (
-    # Source:
-    # https://www.aamva.org/identity/issuer-identification-numbers-(iin)
+    # AAMVA DL/ID Card Design Standard IIN List
+    # Source: https://www.aamva.org/identity/issuer-identification-numbers-(iin)
+    # Last updated: 2023-12-29
     IssuingAuthority(604426, "Prince Edward Island", "PE", "Canada"),
     IssuingAuthority(604427, "American Samoa", "AS", "USA"),
     IssuingAuthority(604428, "Quebec", "QC", "Canada"),
