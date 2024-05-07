@@ -28,6 +28,7 @@ Functions:
 def header_length(version: int) -> int:
     """
     Returns the length of the header based on the AAMVA version.
+    In version 2 the header length changed from 19 bytes to 21 bytes.
 
     Args:
         version (int): The AAMVA version number.
