@@ -1,6 +1,14 @@
 from dataclasses import dataclass
 
 
+class IssuingAuthorityNotFound(Exception):
+    """Raised when Issuing Authority is not found."""
+    def __init__(self, id_number: int):
+        self.id_number = id_number
+        self.message = f"Issuing authority '{id_number}' not found."
+        super().__init__(self.message)
+
+
 @dataclass(frozen=True)
 class IssuingAuthority:
     issuer_identification_number: int
@@ -95,5 +103,5 @@ def get_authority_by_id(id_number: int) -> IssuingAuthority:
                 lambda i: i.issuer_identification_number == id_number,
                 ISSUING_AUTHORITIES))[0]
     except IndexError:
-        raise KeyError(f"id_number: {id_number}, not found")
+        raise IssuingAuthorityNotFound(id_number)
     return issuing_authority

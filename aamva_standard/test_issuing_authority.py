@@ -26,5 +26,5 @@ def test_get_authority_by_id(
             issuing_authorities_testdata[0])
     assert (issuing_authority.get_authority_by_id(100002) ==
             issuing_authorities_testdata[1])
-    with pytest.raises(KeyError, match="not found"):
+    with pytest.raises(issuing_authority.IssuingAuthorityNotFound):
         issuing_authority.get_authority_by_id(1)
