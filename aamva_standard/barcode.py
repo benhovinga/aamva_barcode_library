@@ -23,6 +23,7 @@ Functions:
   Parses the entire AAMVA file and returns a dictionary containing the header and subfile information.
 
 """
+from utils import trim_before
 
 
 def header_length(version: int) -> int:
@@ -37,29 +38,6 @@ def header_length(version: int) -> int:
         int: The length of the header.
     """
     return 19 if version < 2 else 21
-
-
-def remove_all_before(_str: str, indicator: str) -> str:
-    """
-    Removes all characters in a string before a specified indicator.
-
-    Args:
-        _str (str): The input string.
-        indicator (str): The indicator to search for in the string.
-
-    Returns:
-        str: The modified string after removing characters before the indicator.
-
-    Raises:
-        ValueError: If the indicator is not found in the string.
-    """
-    if _str[0] != indicator:
-        try:
-            index = _str.index(indicator)
-        except ValueError:
-            raise ValueError(f"Indicator \"{indicator}\" is missing")
-        _str = _str[index:]
-    return _str
 
 
 def parse_file_header(file: str) -> dict:
@@ -175,7 +153,7 @@ def parse_file(file: str) -> dict:
     Raises:
         ValueError: If the number of entries in the header is less than 1.
     """
-    file = remove_all_before(file, "@")
+    file = trim_before("@", file)
     header = parse_file_header(file)
     if header["number_of_entries"] < 1:
         raise ValueError("number of entries cannot be less than 1")

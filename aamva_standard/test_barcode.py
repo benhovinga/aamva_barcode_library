@@ -121,16 +121,6 @@ def test_header_length_lambda_function(version, expects):
     assert barcode.header_length(version) == expects
 
 
-def test_can_trim_to_indicator():
-    assert barcode.remove_all_before("@After", "@") == "@After"
-    assert barcode.remove_all_before("Before@After", "@") == "@After"
-
-
-def test_trim_to_indicator_raises_missing_indicator():
-    with pytest.raises(ValueError, match="Indicator .* is missing"):
-        barcode.remove_all_before("no indicator here", "@")
-
-
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
 def test_can_read_file_header(test_string, _, expects):
     assert barcode.parse_file_header(test_string) == expects["header"]
