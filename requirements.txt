@@ -1,0 +1,2 @@
+pdf417decoder==1.0.8
+pillow==10.3.0

@@ -5,3 +5,5 @@ htmlcov
 .vscode
 _old_stuff
 .pytest_cache
+.venv
+_private
