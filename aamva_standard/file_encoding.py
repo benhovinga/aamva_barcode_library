@@ -28,14 +28,16 @@ from utils import trim_before
 
 def header_length(version: int) -> int:
     """
-    Returns the length of the header based on the AAMVA version.
-    In version 2 the header length changed from 19 bytes to 21 bytes.
+    Returns the length of the header based on the AAMVA version. In version 2
+    of the AAMVA Standard the header length increased from 19 bytes to 21
+    bytes. This is to accomidate a new 2 byte field called "number of entries"
+    in the header.
 
     Args:
         version (int): The AAMVA version number.
 
     Returns:
-        int: The length of the header.
+        int: The length of the header (19 or 21)
     """
     return 19 if version < 2 else 21
 
