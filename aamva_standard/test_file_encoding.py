@@ -1,5 +1,5 @@
 import pytest
-import barcode
+import file_encoding
 
 testdata_ids = ("AAMVA Version 1", "AAMVA Version 10")
 testdata = (
@@ -118,24 +118,24 @@ testdata = (
     ((1, 19), (2, 21)),
     ids=("AAMVA Version 1", "AAMVA Version 2+"))
 def test_header_length_lambda_function(version, expects):
-    assert barcode.header_length(version) == expects
+    assert file_encoding.header_length(version) == expects
 
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
 def test_can_read_file_header(test_string, _, expects):
-    assert barcode.parse_file_header(test_string) == expects["header"]
+    assert file_encoding.parse_file_header(test_string) == expects["header"]
 
 
 def test_read_file_header_raises_file_type_missing():
     with pytest.raises(ValueError, match="file type missing"):
-        barcode.parse_file_header("@\n\x1e\rLLLL 999999100201")
+        file_encoding.parse_file_header("@\n\x1e\rLLLL 999999100201")
 
 
 @pytest.mark.parametrize(
     "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile_designator(test_string, designators, expects):
     for index, designator in enumerate(designators):
-        assert barcode.parse_subfile_designator(
+        assert file_encoding.parse_subfile_designator(
             test_string,
             expects["header"]["aamva_version_number"],
             index) == designator
@@ -144,12 +144,12 @@ def test_can_read_subfile_designator(test_string, designators, expects):
 @pytest.mark.parametrize(
     "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile(test_string, designators, expects):
-    assert barcode.parse_subfile(
+    assert file_encoding.parse_subfile(
         test_string,
         expects["header"]["data_element_separator"],
         expects["header"]["segment_terminator"],
         *designators[0]) == expects["subfiles"]["DL"]
-    assert barcode.parse_subfile(
+    assert file_encoding.parse_subfile(
         test_string,
         expects["header"]["data_element_separator"],
         expects["header"]["segment_terminator"],
@@ -161,7 +161,7 @@ def test_can_read_subfile(test_string, designators, expects):
 def test_read_subfile_raises_missing_subfile_type(
         test_string, designators, expects):
     with pytest.raises(ValueError, match="missing subfile type"):
-        barcode.parse_subfile(
+        file_encoding.parse_subfile(
             test_string,
             expects["header"]["data_element_separator"],
             expects["header"]["segment_terminator"],
@@ -173,7 +173,7 @@ def test_read_subfile_raises_missing_subfile_type(
 def test_read_subfile_raises_missing_segment_terminator(
         test_string, designators, expects):
     with pytest.raises(ValueError, match="missing segment terminator"):
-        barcode.parse_subfile(
+        file_encoding.parse_subfile(
             test_string,
             expects["header"]["data_element_separator"],
             expects["header"]["segment_terminator"],
@@ -182,11 +182,11 @@ def test_read_subfile_raises_missing_segment_terminator(
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
 def test_can_read_file(test_string, _, expects):
-    assert barcode.parse_file(test_string) == expects
+    assert file_encoding.parse_file(test_string) == expects
 
 
 def test_read_file_raises_number_of_entries_cannot_be_less_than_1():
     with pytest.raises(
             ValueError,
             match="number of entries cannot be less than 1"):
-        barcode.parse_file("@\n\x1e\rANSI 6360000100")
+        file_encoding.parse_file("@\n\x1e\rANSI 6360000100")

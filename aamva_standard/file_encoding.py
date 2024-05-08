@@ -1,6 +1,6 @@
-"""barcode.py
+"""file_encoding.py
 
-This module provides functions for parsing AAMVA (American Association of Motor Vehicle Administrators) barcode data.
+This module provides functions for parsing AAMVA DL/ID barcode data.
 
 Functions:
 - header_length(version: int) -> int:
