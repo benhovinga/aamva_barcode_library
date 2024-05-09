@@ -30,8 +30,8 @@ def header_length(version: int) -> int:
     """
     Returns the length of the header based on the AAMVA version. In version 2
     of the AAMVA Standard the header length increased from 19 bytes to 21
-    bytes. This is to accomidate a new 2 byte field called
-    "jurisdiction version number" in the header.
+    bytes. This is to accomidate a new 2 byte field called "jurisdiction
+    version number" in the header.
 
     Args:
         version (int): The AAMVA version number.
