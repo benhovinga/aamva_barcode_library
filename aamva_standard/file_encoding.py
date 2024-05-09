@@ -116,8 +116,6 @@ def parse_subfile_designator(
 
 def parse_subfile(
         file: str,
-        data_element_separator: str,
-        segment_terminator: str,
         subfile_type: str,
         offset: int,
         length: int) -> dict:
@@ -126,8 +124,6 @@ def parse_subfile(
 
     Args:
         file (str): A string representing the content of the AAMVA file.
-        data_element_separator (str): The separator between data elements in the subfile.
-        segment_terminator (str): The terminator for the subfile segment.
         subfile_type (str): The expected type of the subfile.
         offset (int): The starting position of the subfile in the file string.
         length (int): The length of the subfile in the file string.
@@ -143,13 +139,13 @@ def parse_subfile(
         raise ValueError(
             f"Subfile is missing subfile type {ascii(file[offset:offset + 2])}\
                 != {ascii(subfile_type)}")
-    elif file[end_offset] != segment_terminator:
+    elif file[end_offset] != SEGMENT_TERMINATOR:
         raise ValueError(
             f"Subfile is missing segment terminator {ascii(file[end_offset])} \
-                != {ascii(segment_terminator)}")
+                != {ascii(SEGMENT_TERMINATOR)}")
     subfile = {}
     elements = filter(
-        None, file[offset + 2:end_offset].split(data_element_separator))
+        None, file[offset + 2:end_offset].split(DATA_ELEMENT_SEPARATOR))
     for item in elements:
         subfile[item[:3]] = item[3:]
     return subfile
@@ -177,10 +173,7 @@ def parse_file(file: str) -> dict:
         designator = parse_subfile_designator(
             file, header["aamva_version_number"], i)
         subfiles[designator[0]] = parse_subfile(
-            file,
-            header["data_element_separator"],
-            header["segment_terminator"],
-            *designator)
+            file, *designator)
     return {
         "header": header,
         "subfiles": subfiles

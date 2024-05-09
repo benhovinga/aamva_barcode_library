@@ -148,13 +148,9 @@ def test_can_read_subfile_designator(test_string, designators, expects):
 def test_can_read_subfile(test_string, designators, expects):
     assert file_encoding.parse_subfile(
         test_string,
-        expects["header"]["data_element_separator"],
-        expects["header"]["segment_terminator"],
         *designators[0]) == expects["subfiles"]["DL"]
     assert file_encoding.parse_subfile(
         test_string,
-        expects["header"]["data_element_separator"],
-        expects["header"]["segment_terminator"],
         *designators[1]) == expects["subfiles"]["ZV"]
 
 
@@ -165,8 +161,6 @@ def test_read_subfile_raises_missing_subfile_type(
     with pytest.raises(ValueError, match="missing subfile type"):
         file_encoding.parse_subfile(
             test_string,
-            expects["header"]["data_element_separator"],
-            expects["header"]["segment_terminator"],
             designators[0][0], designators[0][1] - 1, designators[0][2])
 
 
@@ -177,8 +171,6 @@ def test_read_subfile_raises_missing_segment_terminator(
     with pytest.raises(ValueError, match="missing segment terminator"):
         file_encoding.parse_subfile(
             test_string,
-            expects["header"]["data_element_separator"],
-            expects["header"]["segment_terminator"],
             designators[0][0], designators[0][1], designators[0][2] - 1)
 
 
