@@ -26,6 +26,14 @@ Functions:
 from utils import trim_before
 
 
+# Static File Header Elements
+COMPLIANCE_INDICATOR = "@"
+DATA_ELEMENT_SEPARATOR = "\n"
+RECORD_SEPARATOR = "\x1e"
+SEGMENT_TERMINATOR = "\r"
+FILE_TYPE = "ANSI "
+
+
 def header_length(version: int) -> int:
     """
     Returns the length of the header based on the AAMVA version. In version 2
@@ -53,18 +61,23 @@ def parse_file_header(file: str) -> dict:
         dict: A dictionary containing the parsed header information.
 
     Raises:
-        ValueError: If the file type in the header does not match the expected "ANSI ".
+        ValueError: If header contains invalid data.
     """
-    if file[4:9] != "ANSI ":
-        raise ValueError(
-            f"header file type missing \"{file[4:9]}\" != \"ANSI \"")
-    header = dict(
-        data_element_separator=str(file[1]),
-        record_separator=str(file[2]),
-        segment_terminator=str(file[3]),
-        issuer_identification_number=int(file[9:15]),
-        aamva_version_number=int(file[15:17])
-    )
+    # Validate core header elements
+    if file[0] != COMPLIANCE_INDICATOR:
+        raise ValueError("Compliance Indicator is invalid.")
+    elif file[1] != DATA_ELEMENT_SEPARATOR:
+        raise ValueError("Data Element Separator is invalid.")
+    elif file[2] != RECORD_SEPARATOR:
+        raise ValueError("Record Separator is invalid.")
+    elif file[3] != SEGMENT_TERMINATOR:
+        raise ValueError("Segment Terminator is invalid.")
+    elif file[4:9] != FILE_TYPE:
+        raise ValueError("File Type is invalid.")
+    
+    header = dict()
+    header["issuer_identification_number"] = int(file[9:15])
+    header["aamva_version_number"] = int(file[15:17])
     if header["aamva_version_number"] < 2:
         header["jurisdiction_version_number"] = 0
         header["number_of_entries"] = int(file[17:19])

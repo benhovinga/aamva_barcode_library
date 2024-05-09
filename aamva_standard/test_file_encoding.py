@@ -17,9 +17,6 @@ testdata = (
         ),
         {
             "header": {
-                "data_element_separator": "\n",
-                "record_separator": "\x1e",
-                "segment_terminator": "\r",
                 "issuer_identification_number": 636000,
                 "aamva_version_number": 1,
                 "jurisdiction_version_number": 0,
@@ -65,9 +62,6 @@ testdata = (
         ),
         {
             "header": {
-                "data_element_separator": "\n",
-                "record_separator": "\x1e",
-                "segment_terminator": "\r",
                 "issuer_identification_number": 636000,
                 "aamva_version_number": 10,
                 "jurisdiction_version_number": 1,
@@ -126,9 +120,17 @@ def test_can_read_file_header(test_string, _, expects):
     assert file_encoding.parse_file_header(test_string) == expects["header"]
 
 
-def test_read_file_header_raises_file_type_missing():
-    with pytest.raises(ValueError, match="file type missing"):
-        file_encoding.parse_file_header("@\n\x1e\rLLLL 999999100201")
+def test_read_file_header_raises_value_error():
+    with pytest.raises(ValueError, match="Compliance Indicator is invalid."):
+        file_encoding.parse_file_header("#\n\x1e\rANSI 999999100201")
+    with pytest.raises(ValueError, match="Data Element Separator is invalid."):
+        file_encoding.parse_file_header("@#\x1e\rANSI 999999100201")
+    with pytest.raises(ValueError, match="Record Separator is invalid."):
+        file_encoding.parse_file_header("@\n#\rANSI 999999100201")
+    with pytest.raises(ValueError, match="Segment Terminator is invalid."):
+        file_encoding.parse_file_header("@\n\x1e#ANSI 999999100201")
+    with pytest.raises(ValueError, match="File Type is invalid."):
+        file_encoding.parse_file_header("@\n\x1e\r#####999999100201")
 
 
 @pytest.mark.parametrize(
