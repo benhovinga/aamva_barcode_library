@@ -65,7 +65,6 @@ class FileHeader(NamedTuple):
                 aamva_version=aamva_version,
                 number_of_entries=int(file[17:19])
             )
-        
         return cls(
             issuer_id=int(file[9:15]),
             aamva_version=aamva_version,
@@ -84,7 +83,7 @@ class FileHeader(NamedTuple):
             self.DATA_ELEMENT_SEPARATOR + \
             self.RECORD_SEPARATOR + \
             self.SEGMENT_TERMINATOR + \
-            self.FILE_TYPE + \
+            self.FILE_TYPE.ljust(5) + \
             str(self.issuer_id).rjust(6, '0') + \
             str(self.aamva_version).rjust(2, '0') + \
             jurisdiction + \
