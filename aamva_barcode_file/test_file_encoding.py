@@ -16,12 +16,12 @@ testdata = (
             ("ZV", 226, 32)
         ),
         {
-            "header": {
-                "issuer_identification_number": 636000,
-                "aamva_version_number": 1,
-                "jurisdiction_version_number": 0,
-                "number_of_entries": 2
-            },
+            "header": file_encoding.FileHeader(
+                issuer_id=636000,
+                aamva_version=1,
+                jurisdiction_version=0,
+                number_of_entries=2
+            ),
             "subfiles": {
                 "DL": {
                     "DAQ": "0123456789ABC",
@@ -61,12 +61,12 @@ testdata = (
             ("ZV", 319, 8)
         ),
         {
-            "header": {
-                "issuer_identification_number": 636000,
-                "aamva_version_number": 10,
-                "jurisdiction_version_number": 1,
-                "number_of_entries": 2
-            },
+            "header": file_encoding.FileHeader(
+                issuer_id=636000,
+                aamva_version=10,
+                jurisdiction_version=1,
+                number_of_entries=2
+            ),
             "subfiles": {
                 "DL": {
                     "DAC": "MICHAEL",
@@ -108,38 +108,12 @@ testdata = (
 
 
 @pytest.mark.parametrize(
-    "version, expects",
-    ((1, 19), (2, 21)),
-    ids=("AAMVA Version 1", "AAMVA Version 2+"))
-def test_header_length_lambda_function(version, expects):
-    assert file_encoding.header_length(version) == expects
-
-
-@pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
-def test_can_read_file_header(test_string, _, expects):
-    assert file_encoding.parse_file_header(test_string) == expects["header"]
-
-
-def test_read_file_header_raises_value_error():
-    with pytest.raises(ValueError, match="Compliance Indicator is invalid."):
-        file_encoding.parse_file_header("#\n\x1e\rANSI 999999100201")
-    with pytest.raises(ValueError, match="Data Element Separator is invalid."):
-        file_encoding.parse_file_header("@#\x1e\rANSI 999999100201")
-    with pytest.raises(ValueError, match="Record Separator is invalid."):
-        file_encoding.parse_file_header("@\n#\rANSI 999999100201")
-    with pytest.raises(ValueError, match="Segment Terminator is invalid."):
-        file_encoding.parse_file_header("@\n\x1e#ANSI 999999100201")
-    with pytest.raises(ValueError, match="File Type is invalid."):
-        file_encoding.parse_file_header("@\n\x1e\r#####999999100201")
-
-
-@pytest.mark.parametrize(
     "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile_designator(test_string, designators, expects):
     for index, designator in enumerate(designators):
         assert file_encoding.parse_subfile_designator(
             test_string,
-            expects["header"]["aamva_version_number"],
+            expects["header"].aamva_version,
             index) == designator
 
 
