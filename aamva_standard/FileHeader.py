@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import NamedTuple, Optional
 
+from errors import InvalidHeaderError
+
 
 class FileHeader(NamedTuple):
     """
@@ -24,25 +26,30 @@ class FileHeader(NamedTuple):
         Parses the file header and returns a structured Header object.
 
         Args:
-            file (str): A string representing the content of the AAMVA file.
+            file (str): Output from a barcode scanner.
 
         Returns:
-            dict: A dictionary containing the parsed header information.
+            FileHeader: The file header object.
 
         Raises:
-            ValueError: If header contains invalid data.
+            IndexError: If the header length is too short.
+            InvalidHeaderError: If a header element contains invalid data.
         """
+        MIN_LENGTH = 17
+        
         # Validation
-        if file[0] != cls.COMPLIANCE_INDICATOR:
-            raise ValueError("Compliance Indicator is invalid.")
+        if len(file) < MIN_LENGTH:
+            raise IndexError("Header length is too short.")
+        elif file[0] != cls.COMPLIANCE_INDICATOR:
+            raise InvalidHeaderError("COMPLIANCE_INDICATOR")
         elif file[1] != cls.DATA_ELEMENT_SEPARATOR:
-            raise ValueError("Data Element Separator is invalid.")
+            raise InvalidHeaderError("DATA_ELEMENT_SEPARATOR")
         elif file[2] != cls.RECORD_SEPARATOR:
-            raise ValueError("Record Separator is invalid.")
+            raise InvalidHeaderError("RECORD_SEPARATOR")
         elif file[3] != cls.SEGMENT_TERMINATOR:
-            raise ValueError("Segment Terminator is invalid.")
+            raise InvalidHeaderError("SEGMENT_TERMINATOR")
         elif file[4:9] != cls.FILE_TYPE:
-            raise ValueError("File Type is invalid.")
+            raise InvalidHeaderError("FILE_TYPE")
         
         version = int(file[15:17])
         if version < 2:
