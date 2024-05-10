@@ -20,6 +20,10 @@ class FileHeader(NamedTuple):
     SEGMENT_TERMINATOR = "\r"
     FILE_TYPE = "ANSI "
     
+    @staticmethod
+    def header_length(aamva_version: int):
+        return 19 if aamva_version < 2 else 21
+    
     @classmethod
     def parse(cls, file: str) -> FileHeader:
         """
@@ -51,17 +55,20 @@ class FileHeader(NamedTuple):
         elif file[4:9] != cls.FILE_TYPE:
             raise InvalidHeaderError("FILE_TYPE")
         
-        version = int(file[15:17])
-        if version < 2:
+        aamva_version = int(file[15:17])
+        if len(file) < cls.header_length(aamva_version):
+            raise IndexError("Header length is too short.")
+        
+        if aamva_version < 2:
             return cls(
                 issuer_id=int(file[9:15]),
-                aamva_version=version,
+                aamva_version=aamva_version,
                 number_of_entries=int(file[17:19])
             )
         
         return cls(
             issuer_id=int(file[9:15]),
-            aamva_version=version,
+            aamva_version=aamva_version,
             number_of_entries=int(file[19:21]),
             jurisdiction_version=int(file[17:19])
         )
