@@ -1,6 +1,6 @@
 import pytest
 
-import aamva_barcode_file.FileHeader as FileHeader
+import aamva_barcode_file.file_header as file_header
 import aamva_barcode_file.errors as errors
 
 
@@ -14,7 +14,7 @@ header_length_testdata = (
 
 @pytest.mark.parametrize("aamva_version, expects", header_length_testdata, ids=header_length_testdata_ids)
 def test_header_length_static_method(aamva_version, expects):
-    assert FileHeader.FileHeader.header_length(aamva_version) == expects
+    assert file_header.FileHeader.header_length(aamva_version) == expects
 
 
 valid_testdata_ids = ("AAVMA Version 1", "AAMVA Version 10")
@@ -44,12 +44,12 @@ valid_testdata = (
 
 @pytest.mark.parametrize("test_string, options", valid_testdata, ids=valid_testdata_ids)
 def test_can_parse_file_header(test_string, options):
-    assert FileHeader.FileHeader.parse(test_string) == FileHeader.FileHeader(**options)
+    assert file_header.FileHeader.parse(test_string) == file_header.FileHeader(**options)
 
 
 @pytest.mark.parametrize("test_string, options", valid_testdata, ids=valid_testdata_ids)
 def test_can_unparse_file_header(test_string, options):
-    assert FileHeader.FileHeader(**options).unparse() == test_string
+    assert file_header.FileHeader(**options).unparse() == test_string
 
 
 length_testdata_ids = (
@@ -67,30 +67,30 @@ length_testdata = (
 @pytest.mark.parametrize("test_string", length_testdata, ids=length_testdata_ids)
 def test_parse_raises_index_error_on_short_header(test_string):
     with pytest.raises(IndexError, match="Header length is too short."):
-        FileHeader.FileHeader.parse(test_string)
+        file_header.FileHeader.parse(test_string)
 
 
 def test_parse_raises_invalid_header_error_on_compliance_indicator():
     with pytest.raises(errors.InvalidHeaderError, match="COMPLIANCE_INDICATOR"):
-        FileHeader.FileHeader.parse("#\n\x1e\rANSI 636000100102")
+        file_header.FileHeader.parse("#\n\x1e\rANSI 636000100102")
 
 
 def test_parse_raises_invalid_header_error_on_data_element_separator():
     with pytest.raises(errors.InvalidHeaderError, match="DATA_ELEMENT_SEPARATOR"):
-        FileHeader.FileHeader.parse("@#\x1e\rANSI 636000100102")
+        file_header.FileHeader.parse("@#\x1e\rANSI 636000100102")
 
 
 def test_parse_raises_invalid_header_error_on_record_separator():
     with pytest.raises(errors.InvalidHeaderError, match="RECORD_SEPARATOR"):
-        FileHeader.FileHeader.parse("@\n#\rANSI 636000100102")
+        file_header.FileHeader.parse("@\n#\rANSI 636000100102")
 
 
 def test_parse_raises_invalid_header_error_on_segment_terminator():
     with pytest.raises(errors.InvalidHeaderError, match="SEGMENT_TERMINATOR"):
-        FileHeader.FileHeader.parse("@\n\x1e#ANSI 636000100102")
+        file_header.FileHeader.parse("@\n\x1e#ANSI 636000100102")
 
 
 def test_parse_raises_invalid_header_error_on_file_type():
     with pytest.raises(errors.InvalidHeaderError, match="FILE_TYPE"):
-        FileHeader.FileHeader.parse("@\n\x1e\r#####636000100102")
+        file_header.FileHeader.parse("@\n\x1e\r#####636000100102")
 

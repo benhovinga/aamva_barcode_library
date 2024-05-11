@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import NamedTuple
 
-from .SubfileDesignator import SubfileDesignator
-from .FileHeader import FileHeader
+from .subfile_designator import SubfileDesignator
+from .file_header import FileHeader
 
 class Subfile(NamedTuple):
     subfile_type: str

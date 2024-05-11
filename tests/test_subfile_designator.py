@@ -1,6 +1,6 @@
 import pytest
 
-import aamva_barcode_file.SubfileDesignator as SubfileDesignator
+import aamva_barcode_file.subfile_designator as subfile_designator
 
 
 valid_testdata_ids = ("AAVMA Version 1", "AAMVA Version 10")
@@ -46,11 +46,11 @@ valid_testdata = (
 @pytest.mark.parametrize("test_string, version, options", valid_testdata, ids=valid_testdata_ids)
 def test_can_parse_subfile_designator(test_string, version, options):
     for i in range(len(options)):
-        assert SubfileDesignator.SubfileDesignator.parse(test_string, version, i) == SubfileDesignator.SubfileDesignator(**options[i])
+        assert subfile_designator.SubfileDesignator.parse(test_string, version, i) == subfile_designator.SubfileDesignator(**options[i])
 
 
 def test_can_unparse_subfile_designator():
-    assert SubfileDesignator.SubfileDesignator(
+    assert subfile_designator.SubfileDesignator(
         subfile_type="DL",
         offset=12,
         length=321).unparse() == "DL00120321"
@@ -58,9 +58,9 @@ def test_can_unparse_subfile_designator():
 
 def test_parse_raises_index_error_on_short_designator():
     with pytest.raises(IndexError, match="Subfile designator too short."):
-        SubfileDesignator.SubfileDesignator.parse("@\n\x1e\rANSI 6360000102", 1, 0)
+        subfile_designator.SubfileDesignator.parse("@\n\x1e\rANSI 6360000102", 1, 0)
 
 
 def test_parse_raises_value_error_on_bad_data():
     with pytest.raises(ValueError, match="invalid literal for int"):
-        SubfileDesignator.SubfileDesignator.parse("@\n\x1e\rANSI 6360000102XXXXXXXXXX", 1, 0)
+        subfile_designator.SubfileDesignator.parse("@\n\x1e\rANSI 6360000102XXXXXXXXXX", 1, 0)
