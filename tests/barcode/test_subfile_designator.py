@@ -1,6 +1,6 @@
 import pytest
 
-import aamva_barcode_file.subfile_designator as subfile_designator
+import aamva.barcode_file.subfile_designator as subfile_designator
 
 
 valid_testdata_ids = ("AAVMA Version 1", "AAMVA Version 10")

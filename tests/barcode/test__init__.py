@@ -1,6 +1,6 @@
 import pytest
 
-import aamva_barcode_file.file_encoding as file_encoding
+import aamva.barcode_file as barcode_file
 
 testdata_ids = ("AAMVA Version 1", "AAMVA Version 10")
 testdata = (
@@ -16,15 +16,15 @@ testdata = (
             ("DL", 39, 187),
             ("ZV", 226, 32)
         ),
-        {
-            "header": file_encoding.FileHeader(
+        barcode_file.BarcodeFile(
+            header=barcode_file.FileHeader(
                 issuer_id=636000,
                 aamva_version=1,
                 jurisdiction_version=0,
                 number_of_entries=2
             ),
-            "subfiles": [
-                file_encoding.Subfile(
+            subfiles=(
+                barcode_file.Subfile(
                     "DL",
                     {
                         "DAQ": "0123456789ABC",
@@ -46,14 +46,14 @@ testdata = (
                         "DBD": "19961201"
                     }
                 ),
-                file_encoding.Subfile(
+                barcode_file.Subfile(
                     "ZV",
                     {
                         "ZVA": "JURISDICTIONDEFINEDELEMENT"
                     }
                 )
-            ]
-        }
+            )
+        )
     ),
     (
         # AAMVA Version 10
@@ -67,15 +67,15 @@ testdata = (
             ("DL", 41, 278),
             ("ZV", 319, 8)
         ),
-        {
-            "header": file_encoding.FileHeader(
+        barcode_file.BarcodeFile(
+            header=barcode_file.FileHeader(
                 issuer_id=636000,
                 aamva_version=10,
                 jurisdiction_version=1,
                 number_of_entries=2
             ),
-            "subfiles": [
-                file_encoding.Subfile(
+            subfiles=(
+                barcode_file.Subfile(
                     "DL",
                     {
                         "DAC": "MICHAEL",
@@ -108,25 +108,25 @@ testdata = (
                         "DDG": "N"
                     }
                 ),
-                file_encoding.Subfile(
+                barcode_file.Subfile(
                     "ZV",
                     {
                         "ZVA": "01"
                     }
                 )
-            ]
-        }
+            )
+        )
     )
 )
 
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
-def test_can_read_file(test_string, _, expects):
-    assert file_encoding.parse_file(test_string) == expects
+def test_can_parse_barcode_file(test_string, _, expects):
+    assert barcode_file.BarcodeFile.parse(test_string) == expects
 
 
-def test_read_file_raises_number_of_entries_cannot_be_less_than_1():
+def test_parse_raises_value_error_number_of_entries_cannot_be_less_than_1():
     with pytest.raises(
             ValueError,
             match="number of entries cannot be less than 1"):
-        file_encoding.parse_file("@\n\x1e\rANSI 6360000100")
+        barcode_file.BarcodeFile.parse("@\n\x1e\rANSI 6360000100")

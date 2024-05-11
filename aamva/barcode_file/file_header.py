@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import NamedTuple, Optional
 
-from .errors import InvalidHeaderError
+from ..errors import InvalidHeaderError
 
 
 class FileHeader(NamedTuple):

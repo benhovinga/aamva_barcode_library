@@ -1,6 +1,6 @@
 import pytest
 
-import aamva_barcode_file.subfile as subfile
+import aamva.barcode_file.subfile as subfile
 
 
 testdata_ids = ("1 element", "multi element", "multi element with empty")
