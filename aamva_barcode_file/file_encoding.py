@@ -25,45 +25,9 @@ Functions:
 """
 from .FileHeader import FileHeader
 from .SubfileDesignator import SubfileDesignator
+from .Subfile import Subfile
 
 from .utils import trim_before
-
-
-def parse_subfile(
-        file: str,
-        subfile_type: str,
-        offset: int,
-        length: int) -> dict:
-    """
-    Parses a subfile from the AAMVA file and returns a dictionary with its elements.
-
-    Args:
-        file (str): A string representing the content of the AAMVA file.
-        subfile_type (str): The expected type of the subfile.
-        offset (int): The starting position of the subfile in the file string.
-        length (int): The length of the subfile in the file string.
-
-    Returns:
-        dict: A dictionary containing the parsed subfile information.
-
-    Raises:
-        ValueError: If the subfile type or segment terminator is not found in the specified positions.
-    """
-    end_offset = offset + length - 1
-    if file[offset:offset + 2] != subfile_type:
-        raise ValueError(
-            f"Subfile is missing subfile type {ascii(file[offset:offset + 2])}\
-                != {ascii(subfile_type)}")
-    elif file[end_offset] != FileHeader.SEGMENT_TERMINATOR:
-        raise ValueError(
-            f"Subfile is missing segment terminator {ascii(file[end_offset])} \
-                != {ascii(FileHeader.SEGMENT_TERMINATOR)}")
-    subfile = {}
-    elements = filter(
-        None, file[offset + 2:end_offset].split(FileHeader.DATA_ELEMENT_SEPARATOR))
-    for item in elements:
-        subfile[item[:3]] = item[3:]
-    return subfile
 
 
 def parse_file(file: str) -> dict:
@@ -79,19 +43,19 @@ def parse_file(file: str) -> dict:
     Raises:
         ValueError: If the number of entries in the header is less than 1.
     """
-    file = trim_before("@", file)
+    file = trim_before(FileHeader.COMPLIANCE_INDICATOR, file)
     header = FileHeader.parse(file)
     if header.number_of_entries < 1:
         raise ValueError("number of entries cannot be less than 1")
-    subfiles = {}
+    
+    subfiles = list()
     for i in range(header.number_of_entries):
         designator = SubfileDesignator.parse(
             file=file,
             aamva_version=header.aamva_version,
             designator_index=i)
         
-        subfiles[designator.subfile_type] = parse_subfile(
-            file, *designator)
+        subfiles.append(Subfile.parse(file, designator))
     return {
         "header": header,
         "subfiles": subfiles

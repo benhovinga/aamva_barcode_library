@@ -23,30 +23,36 @@ testdata = (
                 jurisdiction_version=0,
                 number_of_entries=2
             ),
-            "subfiles": {
-                "DL": {
-                    "DAQ": "0123456789ABC",
-                    "DAA": "PUBLIC,JOHN,Q",
-                    "DAG": "123 MAIN STREET",
-                    "DAI": "ANYTOWN",
-                    "DAJ": "VA",
-                    "DAK": "123459999  ",
-                    "DAR": "DM  ",
-                    "DAS": "          ",
-                    "DAT": "     ",
-                    "DAU": "509",
-                    "DAW": "175",
-                    "DAY": "BL ",
-                    "DAZ": "BR ",
-                    "DBA": "20011201",
-                    "DBB": "19761123",
-                    "DBC": "M",
-                    "DBD": "19961201"
-                },
-                "ZV": {
-                    "ZVA": "JURISDICTIONDEFINEDELEMENT"
-                }
-            }
+            "subfiles": [
+                file_encoding.Subfile(
+                    "DL",
+                    {
+                        "DAQ": "0123456789ABC",
+                        "DAA": "PUBLIC,JOHN,Q",
+                        "DAG": "123 MAIN STREET",
+                        "DAI": "ANYTOWN",
+                        "DAJ": "VA",
+                        "DAK": "123459999  ",
+                        "DAR": "DM  ",
+                        "DAS": "          ",
+                        "DAT": "     ",
+                        "DAU": "509",
+                        "DAW": "175",
+                        "DAY": "BL ",
+                        "DAZ": "BR ",
+                        "DBA": "20011201",
+                        "DBB": "19761123",
+                        "DBC": "M",
+                        "DBD": "19961201"
+                    }
+                ),
+                file_encoding.Subfile(
+                    "ZV",
+                    {
+                        "ZVA": "JURISDICTIONDEFINEDELEMENT"
+                    }
+                )
+            ]
         }
     ),
     (
@@ -68,75 +74,50 @@ testdata = (
                 jurisdiction_version=1,
                 number_of_entries=2
             ),
-            "subfiles": {
-                "DL": {
-                    "DAC": "MICHAEL",
-                    "DAD": "JOHN",
-                    "DAG": "2300 WEST BROAD STREET",
-                    "DAI": "RICHMOND",
-                    "DAJ": "VA",
-                    "DAK": "232690000  ",
-                    "DAQ": "T64235789",
-                    "DAU": "068 in",
-                    "DAY": "BRO",
-                    "DBA": "12102024",
-                    "DBB": "06061986",
-                    "DBC": "1",
-                    "DBD": "06062019",
-                    "DCA": "D",
-                    "DCB": "K",
-                    "DCD": "PH",
-                    "DCF": "2424244747474786102204",
-                    "DCG": "USA",
-                    "DCK": "123456789",
-                    "DCS": "SAMPLE",
-                    "DCU": "JR",
-                    "DDA": "F",
-                    "DDB": "06062018",
-                    "DDC": "06062020",
-                    "DDD": "1",
-                    "DDE": "N",
-                    "DDF": "N",
-                    "DDG": "N"
-                },
-                "ZV": {
-                    "ZVA": "01"
-                }
-            }
+            "subfiles": [
+                file_encoding.Subfile(
+                    "DL",
+                    {
+                        "DAC": "MICHAEL",
+                        "DAD": "JOHN",
+                        "DAG": "2300 WEST BROAD STREET",
+                        "DAI": "RICHMOND",
+                        "DAJ": "VA",
+                        "DAK": "232690000  ",
+                        "DAQ": "T64235789",
+                        "DAU": "068 in",
+                        "DAY": "BRO",
+                        "DBA": "12102024",
+                        "DBB": "06061986",
+                        "DBC": "1",
+                        "DBD": "06062019",
+                        "DCA": "D",
+                        "DCB": "K",
+                        "DCD": "PH",
+                        "DCF": "2424244747474786102204",
+                        "DCG": "USA",
+                        "DCK": "123456789",
+                        "DCS": "SAMPLE",
+                        "DCU": "JR",
+                        "DDA": "F",
+                        "DDB": "06062018",
+                        "DDC": "06062020",
+                        "DDD": "1",
+                        "DDE": "N",
+                        "DDF": "N",
+                        "DDG": "N"
+                    }
+                ),
+                file_encoding.Subfile(
+                    "ZV",
+                    {
+                        "ZVA": "01"
+                    }
+                )
+            ]
         }
     )
 )
-
-
-@pytest.mark.parametrize(
-    "test_string, designators, expects", testdata, ids=testdata_ids)
-def test_can_read_subfile(test_string, designators, expects):
-    assert file_encoding.parse_subfile(
-        test_string,
-        *designators[0]) == expects["subfiles"]["DL"]
-    assert file_encoding.parse_subfile(
-        test_string,
-        *designators[1]) == expects["subfiles"]["ZV"]
-
-
-@pytest.mark.parametrize(
-    "test_string, designators, expects", testdata, ids=testdata_ids)
-def test_read_subfile_raises_missing_subfile_type(
-        test_string, designators, expects):
-    with pytest.raises(ValueError, match="missing subfile type"):
-        file_encoding.parse_subfile(
-            test_string,
-            designators[0][0], designators[0][1] - 1, designators[0][2])
-
-
-@pytest.mark.parametrize(
-    "test_string, designators, expects", testdata, ids=testdata_ids)
-def test_read_subfile_raises_missing_segment_terminator(
-        test_string, designators, expects):
-    with pytest.raises(ValueError, match="missing segment terminator"):
-        file_encoding.parse_subfile(
-            test_string,
-            designators[0][0], designators[0][1], designators[0][2] - 1)
 
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
