@@ -110,16 +110,6 @@ testdata = (
 
 @pytest.mark.parametrize(
     "test_string, designators, expects", testdata, ids=testdata_ids)
-def test_can_read_subfile_designator(test_string, designators, expects):
-    for index, designator in enumerate(designators):
-        assert file_encoding.parse_subfile_designator(
-            test_string,
-            expects["header"].aamva_version,
-            index) == designator
-
-
-@pytest.mark.parametrize(
-    "test_string, designators, expects", testdata, ids=testdata_ids)
 def test_can_read_subfile(test_string, designators, expects):
     assert file_encoding.parse_subfile(
         test_string,

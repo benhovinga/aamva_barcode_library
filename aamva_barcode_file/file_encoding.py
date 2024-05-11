@@ -23,35 +23,10 @@ Functions:
   Parses the entire AAMVA file and returns a dictionary containing the header and subfile information.
 
 """
-from .utils import trim_before
 from .FileHeader import FileHeader
+from .SubfileDesignator import SubfileDesignator
 
-
-def parse_subfile_designator(
-        file: str,
-        aamva_version_number: int,
-        designator_index: int) -> tuple:
-    """
-    Parses the subfile designator from the AAMVA file.
-
-    Args:
-        file (str): A string representing the content of the AAMVA file.
-        aamva_version_number (int): The AAMVA version number.
-        designator_index (int): The index of the subfile designator.
-
-    Returns:
-        tuple: A tuple containing subfile type, offset, and length.
-
-    Raises:
-        IndexError: If the calculated cursor position is out of range.
-    """
-    DESIGNATOR_LEGNTH = 10
-    cursor = designator_index * DESIGNATOR_LEGNTH + \
-        FileHeader.header_length(aamva_version_number)
-    return (
-        str(file[cursor:cursor + 2]),
-        int(file[cursor + 2:cursor + 6]),
-        int(file[cursor + 6:cursor + 10]))
+from .utils import trim_before
 
 
 def parse_subfile(
@@ -110,9 +85,12 @@ def parse_file(file: str) -> dict:
         raise ValueError("number of entries cannot be less than 1")
     subfiles = {}
     for i in range(header.number_of_entries):
-        designator = parse_subfile_designator(
-            file, header.aamva_version, i)
-        subfiles[designator[0]] = parse_subfile(
+        designator = SubfileDesignator.parse(
+            file=file,
+            aamva_version=header.aamva_version,
+            designator_index=i)
+        
+        subfiles[designator.subfile_type] = parse_subfile(
             file, *designator)
     return {
         "header": header,
