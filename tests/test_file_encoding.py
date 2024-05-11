@@ -1,5 +1,6 @@
 import pytest
-import file_encoding
+
+import aamva_barcode_file.file_encoding as file_encoding
 
 testdata_ids = ("AAMVA Version 1", "AAMVA Version 10")
 testdata = (

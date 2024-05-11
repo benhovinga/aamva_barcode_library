@@ -1,5 +1,6 @@
 import pytest
-import issuing_authority
+
+import aamva_barcode_file.issuing_authority as issuing_authority
 
 
 @pytest.fixture

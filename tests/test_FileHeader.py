@@ -1,7 +1,7 @@
 import pytest
 
-import FileHeader
-import errors
+import aamva_barcode_file.FileHeader as FileHeader
+import aamva_barcode_file.errors as errors
 
 
 header_length_testdata_ids = ("AAMVA Version 1", "AAMVA Version 10")

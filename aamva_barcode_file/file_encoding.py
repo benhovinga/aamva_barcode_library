@@ -23,8 +23,8 @@ Functions:
   Parses the entire AAMVA file and returns a dictionary containing the header and subfile information.
 
 """
-from utils import trim_before
-from FileHeader import FileHeader
+from .utils import trim_before
+from .FileHeader import FileHeader
 
 
 def parse_subfile_designator(

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import NamedTuple
 
-from FileHeader import FileHeader
+from .FileHeader import FileHeader
 
 
 class SubfileDesignator(NamedTuple):

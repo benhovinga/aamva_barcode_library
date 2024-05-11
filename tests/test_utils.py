@@ -1,6 +1,6 @@
 import pytest
 
-import utils
+import aamva_barcode_file.utils as utils
 
 
 def test_can_trim_before():
