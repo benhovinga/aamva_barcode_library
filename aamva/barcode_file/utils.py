@@ -1,9 +1,3 @@
-"""utils.py
-
-This module provides functional tools for the project.
-"""
-
-
 def trim_before(char: str, _str: str) -> str:
     """
     Removes everything before the first instance of a character in a given string.
