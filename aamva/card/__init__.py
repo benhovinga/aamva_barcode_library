@@ -6,12 +6,13 @@ class CardType(Flag):
     DL = auto()
     BOTH = ID | DL
     
-    @staticmethod
-    def card_names():
-        return {
-            CardType.ID: "Identification Card",
-            CardType.DL: "Driver License Card"
-        }
+    @property
+    def description(self):
+        if self is CardType.ID:
+            return "Identification Card"
+        elif self is CardType.DL:
+            return "Driver License Card"
+        return None
 
 
 @dataclass
