@@ -1,6 +1,6 @@
 import pytest
 
-import aamva.barcode_file.file_header as file_header
+import aamva.barcode.file_header as file_header
 import aamva.errors as errors
 
 
