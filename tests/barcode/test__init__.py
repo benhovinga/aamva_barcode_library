@@ -1,6 +1,6 @@
 import pytest
 
-import aamva.barcode_file as barcode_file
+import aamva.barcode as barcode
 
 testdata_ids = ("AAMVA Version 1", "AAMVA Version 10")
 testdata = (
@@ -16,15 +16,15 @@ testdata = (
             ("DL", 39, 187),
             ("ZV", 226, 32)
         ),
-        barcode_file.BarcodeFile(
-            header=barcode_file.FileHeader(
+        barcode.BarcodeFile(
+            header=barcode.FileHeader(
                 issuer_id=636000,
                 aamva_version=1,
                 jurisdiction_version=0,
                 number_of_entries=2
             ),
             subfiles=(
-                barcode_file.Subfile(
+                barcode.Subfile(
                     "DL",
                     {
                         "DAQ": "0123456789ABC",
@@ -46,7 +46,7 @@ testdata = (
                         "DBD": "19961201"
                     }
                 ),
-                barcode_file.Subfile(
+                barcode.Subfile(
                     "ZV",
                     {
                         "ZVA": "JURISDICTIONDEFINEDELEMENT"
@@ -67,15 +67,15 @@ testdata = (
             ("DL", 41, 278),
             ("ZV", 319, 8)
         ),
-        barcode_file.BarcodeFile(
-            header=barcode_file.FileHeader(
+        barcode.BarcodeFile(
+            header=barcode.FileHeader(
                 issuer_id=636000,
                 aamva_version=10,
                 jurisdiction_version=1,
                 number_of_entries=2
             ),
             subfiles=(
-                barcode_file.Subfile(
+                barcode.Subfile(
                     "DL",
                     {
                         "DAC": "MICHAEL",
@@ -108,7 +108,7 @@ testdata = (
                         "DDG": "N"
                     }
                 ),
-                barcode_file.Subfile(
+                barcode.Subfile(
                     "ZV",
                     {
                         "ZVA": "01"
@@ -122,11 +122,11 @@ testdata = (
 
 @pytest.mark.parametrize("test_string, _, expects", testdata, ids=testdata_ids)
 def test_can_parse_barcode_file(test_string, _, expects):
-    assert barcode_file.BarcodeFile.parse(test_string) == expects
+    assert barcode.BarcodeFile.parse(test_string) == expects
 
 
 def test_parse_raises_value_error_number_of_entries_cannot_be_less_than_1():
     with pytest.raises(
             ValueError,
             match="number of entries cannot be less than 1"):
-        barcode_file.BarcodeFile.parse("@\n\x1e\rANSI 6360000100")
+        barcode.BarcodeFile.parse("@\n\x1e\rANSI 6360000100")
