@@ -47,7 +47,7 @@ Below are some resources that made creating this library possible.
 
 MIT License
 
-Copyright (c) 2024 Benjamin P.C. Hovinga
+Copyright &copy; 2024 Benjamin P.C. Hovinga
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
