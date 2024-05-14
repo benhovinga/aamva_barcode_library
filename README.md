@@ -2,7 +2,7 @@
 
 ### Version: v0.5-beta
 
-*The American Association of Motor Vehicle Administrators* (AAMVA) releases a standards guide for driver license and identification card design. The *[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/getmedia/99ac7057-0f4d-4461-b0a2-3a5532e1b35c/AAMVA-2020-DLID-Card-Design-Standard.pdf)* outlines the specifications for the Mandatory PDF417 Bar Code in Annex D.
+*The American Association of Motor Vehicle Administrators* (AAMVA) releases a standards guide for driver license and identification card design. The *[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/topics/driver-license-and-identification-standards)* outlines the specifications for the Mandatory PDF417 Bar Code in Annex D.
 
 This library isn't intended to "scan" these barcodes, but rather parse the data passed in from a barcode scanning tool. The end goal is to display a cards profile in a human readable format.
 
