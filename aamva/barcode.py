@@ -82,7 +82,7 @@ def parse_subfile_designator(barcode_string: BarcodeStr, aamva_version: int, des
     cursor = designator_index * DESIGNATOR_LENGTH + header_length(aamva_version)
     
     if len(barcode_string) < cursor + DESIGNATOR_LENGTH:
-        raise IndexError("Subfile designator is too short.")
+        raise ValueError("Subfile designator is too short.")
     
     return SubfileDesignator(
         subfile_type=str(barcode_string[cursor:cursor + 2]),

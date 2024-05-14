@@ -111,4 +111,17 @@ class TestParseFileHeaderFunction:
 
 
 class TestParseSubfileDesignatorFunction:
-    pass
+    testdata = tuple(map(lambda x: (x[0], x[1], x[3]), barcode_testdata))
+    
+    @pytest.mark.parametrize("version, barcode_string, _", testdata, ids=barcode_testdata_ids)
+    def test_should_raise_value_error_when_designator_too_short(self, version, barcode_string, _):
+        length = 28 if version < 2 else 30
+        with pytest.raises(ValueError, match="too short"):
+            barcode.parse_subfile_designator(barcode_string[:length], version, 0)
+    
+    @pytest.mark.parametrize("version, barcode_string, designators", testdata, ids=barcode_testdata_ids)
+    def test_should_successfully_return_subfile_designator_tuple(self, version, barcode_string, designators):
+        assert barcode.parse_subfile_designator(barcode_string, version, 0) == designators[0]
+        assert barcode.parse_subfile_designator(barcode_string, version, 1) == designators[1]
+        assert barcode.parse_subfile_designator(barcode_string, version, 0) == barcode.SubfileDesignator(*designators[0])
+        assert barcode.parse_subfile_designator(barcode_string, version, 1) == barcode.SubfileDesignator(*designators[1])
