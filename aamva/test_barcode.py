@@ -27,16 +27,16 @@ class TestHeaderLengthFunction:
 
 
 @pytest.fixture
-def swap_char_at_index():
-    def _swap_char_at_index(self, index):
+def replace_char_at_index():
+    def _replace_char_at_index(self, index):
         self = list(self)
         self[index] = "#"
         return "".join(self)
-    return _swap_char_at_index
+    return _replace_char_at_index
 
 
 barcode_testdata = (
-    # ((version, barcode_string, header), ...)
+    # ((version, barcode_string, header, designators, subfiles), ...)
     (
         # AAMVA Version 1
         1,
@@ -45,7 +45,9 @@ barcode_testdata = (
         "DAK123459999  \nDARDM  \nDAS          \nDAT     \nDAU509\nDAW175\n" +
         "DAYBL \nDAZBR \nDBA20011201\nDBB19761123\nDBCM\nDBD19961201\r" +
         "ZVZVAJURISDICTIONDEFINEDELEMENT\r",
-        (636000, 1, 2, 0)
+        (636000, 1, 2, 0),
+        (("DL", 39, 187), ("ZV", 226, 32)),
+        ()
     ), (
         # AAMVA Version 10
         10,
@@ -55,51 +57,55 @@ barcode_testdata = (
         "DAU068 in\nDAYBRO\nDAG2300 WEST BROAD STREET\nDAIRICHMOND\nDAJVA\n" +
         "DAK232690000  \nDCF2424244747474786102204\nDCGUSA\nDCK123456789\n" +
         "DDAF\nDDB06062018\nDDC06062020\nDDD1\rZVZVA01\r",
-        (636000, 10, 2, 1)
+        (636000, 10, 2, 1),
+        (("DL", 41, 278), ("ZV", 319, 8)),
+        ()
     )
 )
 
 
-@pytest.mark.parametrize("version, barcode_string, header", barcode_testdata,
-    ids=map(lambda x: f"version {x[0]}", barcode_testdata))
 class TestParseFileHeaderFunction:
-    def test_should_raise_value_error_when_header_is_too_short(
-        self, version, barcode_string, header):
+    testdata_ids = tuple(map(lambda v: f"Version {v[0]}", barcode_testdata))
+    raises_testdata = tuple(map(lambda x: (x[0], x[1]), barcode_testdata))
+    header_testdata = tuple(map(lambda x: (x[1], x[2]), barcode_testdata))
+    
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_header_is_too_short(self, _, barcode_string):
         with pytest.raises(ValueError, match="too short"):
             barcode.parse_file_header(barcode_string[:17])
 
-    def test_should_raise_value_error_when_compliance_indicator_is_invalid(
-        self, version, barcode_string, header, swap_char_at_index):
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_compliance_indicator_is_invalid(self, _, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="COMPLIANCE_INDICATOR"):
-            barcode.parse_file_header(swap_char_at_index(barcode_string, 0))
+            barcode.parse_file_header(replace_char_at_index(barcode_string, 0))
 
-    def test_should_raise_value_error_when_data_element_separator_is_invalid(
-        self, version, barcode_string, header, swap_char_at_index):
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_data_element_separator_is_invalid(self, _, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="DATA_ELEMENT_SEPARATOR"):
-            barcode.parse_file_header(swap_char_at_index(barcode_string, 1))
+            barcode.parse_file_header(replace_char_at_index(barcode_string, 1))
 
-    def test_should_raise_value_error_when_record_separator_is_invalid(
-        self, version, barcode_string, header, swap_char_at_index):
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_record_separator_is_invalid(self, _, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="RECORD_SEPARATOR"):
-            barcode.parse_file_header(swap_char_at_index(barcode_string, 2))
+            barcode.parse_file_header(replace_char_at_index(barcode_string, 2))
 
-    def test_should_raise_value_error_when_segment_terminator_is_invalid(
-        self, version, barcode_string, header, swap_char_at_index):
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_segment_terminator_is_invalid(self, _, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="SEGMENT_TERMINATOR"):
-            barcode.parse_file_header(swap_char_at_index(barcode_string, 3))
+            barcode.parse_file_header(replace_char_at_index(barcode_string, 3))
 
-    def test_should_raise_value_error_when_file_type_is_invalid(
-        self, version, barcode_string, header, swap_char_at_index):
+    @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_file_type_is_invalid(self, _, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="FILE_TYPE"):
-            barcode.parse_file_header(swap_char_at_index(barcode_string, 4))
+            barcode.parse_file_header(replace_char_at_index(barcode_string, 4))
 
-    def test_should_raise_value_error_when_header_is_too_short_for_version(
-        self, version, barcode_string, header):
+    @pytest.mark.parametrize("version, barcode_string", raises_testdata, ids=testdata_ids)
+    def test_should_raise_value_error_when_header_is_too_short_for_version(self, version, barcode_string):
         length = barcode.header_length(version)
         with pytest.raises(ValueError, match="too short"):
             barcode.parse_file_header(barcode_string[:length - 1])
 
-    def test_should_successfully_return_file_header_tuple(
-        self, version, barcode_string, header):
+    @pytest.mark.parametrize("barcode_string, header", header_testdata, ids=testdata_ids)
+    def test_should_successfully_return_file_header_tuple(self, barcode_string, header):
         assert barcode.parse_file_header(barcode_string) == barcode.FileHeader(*header)
         assert barcode.parse_file_header(barcode_string) == header
