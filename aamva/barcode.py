@@ -1,6 +1,6 @@
-from typing import NamedTuple, Iterable, Optional, Literal
+from typing import NamedTuple, Iterable, Optional, Literal, NewType
 
-type BarcodeStr = str
+BarcodeStr = NewType("BarcodeStr", str)
 
 
 class FileHeader(NamedTuple):
