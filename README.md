@@ -1,6 +1,6 @@
 # AAMVA Driver License and Identification Card 2D Barcode Decoder
 
-Version: v0.4-alpha
+### Version: v0.5-alpha
 
 This Python library facilitates the decoding of the PDF417 2D Barcode found on the back of most Drivers Licenses and Identification Cards in Canada and USA.
 
