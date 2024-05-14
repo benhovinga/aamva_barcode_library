@@ -82,9 +82,9 @@ barcode_testdata_ids = tuple(map(lambda v: f"Version {v[0]}", barcode_testdata))
 
 @pytest.fixture
 def replace_char_at_index():
-    def _replace_char_at_index(self, index):
+    def _replace_char_at_index(self, index, replace_with="#"):
         self = list(self)
-        self[index] = "#"
+        self[index] = replace_with
         return "".join(self)
     return _replace_char_at_index
 
