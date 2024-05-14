@@ -119,7 +119,7 @@ class TestParseFileHeaderFunction:
     @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_header_is_too_short(self, _, barcode_string):
         with pytest.raises(ValueError, match="too short"):
-            barcode.parse_file_header(barcode_string[:17])
+            barcode.parse_file_header(barcode_string[:16])
 
     @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_compliance_indicator_is_invalid(self, _, barcode_string, replace_char_at_index):
