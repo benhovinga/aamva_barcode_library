@@ -154,8 +154,9 @@ class TestParseFileHeaderFunction:
 
     @pytest.mark.parametrize("barcode_string, header", header_testdata, ids=barcode_testdata_ids)
     def test_should_successfully_return_file_header_tuple(self, barcode_string, header):
-        assert barcode.parse_file_header(barcode_string) == barcode.FileHeader(*header)
-        assert barcode.parse_file_header(barcode_string) == header
+        test_header = barcode.parse_file_header(barcode_string)
+        assert test_header == header
+        assert type(test_header) == barcode.FileHeader
 
 
 class TestParseSubfileDesignatorFunction:
@@ -170,8 +171,9 @@ class TestParseSubfileDesignatorFunction:
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile Designator 0", "Subfile Designator 1"))
     @pytest.mark.parametrize("version, barcode_string, designators", testdata, ids=barcode_testdata_ids)
     def test_should_successfully_return_subfile_designator_tuple(self, version, barcode_string, designators, index):
-        assert barcode.parse_subfile_designator(barcode_string, version, index) == designators[index]
-        assert barcode.parse_subfile_designator(barcode_string, version, index) == barcode.SubfileDesignator(*designators[index])
+        test_subfile_designator = barcode.parse_subfile_designator(barcode_string, version, index)
+        assert test_subfile_designator == designators[index]
+        assert type(test_subfile_designator) == barcode.SubfileDesignator
 
 
 class TestParseSubfileFunction:
@@ -203,5 +205,6 @@ class TestParseSubfileFunction:
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
     @pytest.mark.parametrize("barcode_string, designators, subfiles", subfile_testdata, ids=barcode_testdata_ids)
     def test_should_successfully_return_subfile_tuple(self, index, barcode_string, designators, subfiles):
-        assert barcode.parse_subfile(barcode_string, designators[index]) == subfiles[index]
-        assert barcode.parse_subfile(barcode_string, designators[index]) == barcode.Subfile(*subfiles[index])
+        test_subfile = barcode.parse_subfile(barcode_string, designators[index])
+        assert test_subfile == subfiles[index]
+        assert type(test_subfile) == barcode.Subfile
