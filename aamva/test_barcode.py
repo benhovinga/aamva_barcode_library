@@ -208,3 +208,21 @@ class TestParseSubfileFunction:
         test_subfile = barcode.parse_subfile(barcode_string, designators[index])
         assert test_subfile == subfiles[index]
         assert type(test_subfile) == barcode.Subfile
+
+
+class TestParseBarcodeStringFunction:
+    raises_testdata = tuple(map(lambda x: (x[0], x[1]), barcode_testdata))
+    file_testdata = tuple(map(lambda x: (x[1], x[2], x[4]), barcode_testdata))
+    
+    @pytest.mark.parametrize("version, barcode_string", raises_testdata, ids=barcode_testdata_ids)
+    def test_should_raise_value_error_when_number_of_entries_less_than_1(self, version, barcode_string, replace_char_at_index):
+        with pytest.raises(ValueError, match="less than 1"):
+            char_index = 18 if version < 2 else 20
+            barcode_string = replace_char_at_index(barcode_string, char_index, "0")
+            barcode.parse_barcode_string(barcode_string)
+    
+    @pytest.mark.parametrize("barcode_string, header, subfiles", file_testdata, ids=barcode_testdata_ids)
+    def test_should_successfully_return_barcode_file_tuple(self, barcode_string, header, subfiles):
+        barcode_file = barcode.parse_barcode_string(barcode_string)
+        assert barcode_file == (header, subfiles)
+        assert type(barcode_file) == barcode.BarcodeFile
