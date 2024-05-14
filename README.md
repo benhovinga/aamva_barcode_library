@@ -1,4 +1,4 @@
-# AAMVA Driver License and Identification Card 2D Barcode Decoder
+# AAMVA DL/ID Barcode Library
 
 ### Version: v0.5-alpha
 
