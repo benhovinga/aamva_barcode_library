@@ -131,21 +131,21 @@ class TestParseSubfileFunction:
     
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
     @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
-    def test_should_raise_value_error_when_subfile_too_short(self, barcode_string, designators, index):
+    def test_should_raise_value_error_when_subfile_too_short(self, index, barcode_string, designators):
         with pytest.raises(ValueError, match="too short"):
             length = designators[index][1] + designators[index][2] - 1
             barcode.parse_subfile(barcode_string[:length], designators[index])
 
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
     @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
-    def test_should_raise_value_error_when_missing_subfile_type(self, barcode_string, designators, index, replace_char_at_index):
+    def test_should_raise_value_error_when_missing_subfile_type(self, index, barcode_string, designators, replace_char_at_index):
         with pytest.raises(ValueError, match="missing subfile type"):
             barcode_string = replace_char_at_index(barcode_string, designators[index][1])
             barcode.parse_subfile(barcode_string, designators[index])
 
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
     @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
-    def test_should_raise_value_error_when_missing_segment_terminator(self, barcode_string, designators, index, replace_char_at_index):
+    def test_should_raise_value_error_when_missing_segment_terminator(self, index, barcode_string, designators, replace_char_at_index):
         with pytest.raises(ValueError, match="missing segment terminator"):
             subfile_end = designators[index][1] + designators[index][2] - 1
             barcode_string = replace_char_at_index(barcode_string, subfile_end)
