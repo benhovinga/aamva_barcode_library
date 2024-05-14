@@ -2,9 +2,9 @@
 
 ### Version: v0.5-beta
 
-*The American Association of Motor Vehicle Administrators* (AAMVA) releases a standards guide for driver license and identification card design. The *[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/topics/driver-license-and-identification-standards)* outlines the specifications for the Mandatory PDF417 Bar Code in Annex D.
+*The American Association of Motor Vehicle Administrators* (AAMVA) releases a standards guide for driver license and identification card design. The *[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/topics/driver-license-and-identification-standards)* outlines the specifications for the Mandatory PDF417 Bar Code in Annex D. Nearly all jurisdictions across North America use this standard for their driver license and identification cards.
 
-This library isn't intended to "scan" these barcodes, but rather parse the data passed in from a barcode scanning tool. The end goal is to display a cards profile in a human readable format.
+This library isn't intended to "scan" these barcodes, but rather parse the data file coming from a barcode scanning tool (like [zxing-cpp](https://pypi.org/project/zxing-cpp/) or [pdf417decoder](https://pypi.org/project/pdf417decoder/)). After it has been parsed and the data elements decoded into human readable properties, the card profile can be displayed to a user or used by other applications.
 
 ## Quick Start Example
 
