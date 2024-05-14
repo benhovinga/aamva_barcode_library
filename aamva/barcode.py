@@ -91,6 +91,8 @@ def parse_subfile_designator(barcode_string: BarcodeStr, aamva_version: int, des
 
 
 def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> Subfile:
+    if type(designator) == tuple:
+        designator = SubfileDesignator(*designator)
     subfile_type = designator.subfile_type
     offset = designator.offset
     length = designator.length
