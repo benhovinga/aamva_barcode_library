@@ -96,14 +96,16 @@ def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> 
     subfile_type = designator.subfile_type
     offset = designator.offset
     length = designator.length
-    end_offset = offset + length - 1
+    end_offset = offset + length
     
-    if barcode_string[offset:offset + 2] != subfile_type:
+    if len(barcode_string) < end_offset:
+        raise ValueError("Subfile length is too short.")
+    elif barcode_string[offset:offset + 2] != subfile_type:
         raise ValueError("Subfile is missing subfile type.")
-    elif barcode_string[end_offset] != SEGMENT_TERMINATOR:
+    elif barcode_string[end_offset - 1] != SEGMENT_TERMINATOR:
         raise ValueError("Subfile is missing segment terminator.")
     
-    items = filter(None, barcode_string[offset + 2: end_offset].split(DATA_ELEMENT_SEPARATOR))
+    items = filter(None, barcode_string[offset + 2: end_offset - 1].split(DATA_ELEMENT_SEPARATOR))
     elements = dict()
     for item in items:
         elements[item[:3]] = item[3:]
