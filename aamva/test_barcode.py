@@ -14,8 +14,27 @@ barcode_testdata = (
         "ZVZVAJURISDICTIONDEFINEDELEMENT\r",
         (636000, 1, 2, 0),
         (("DL", 39, 187), ("ZV", 226, 32)),
-        ()
-    ), (
+        (
+            ("DL",{
+                'DAQ': '0123456789ABC',
+                'DAA': 'PUBLIC,JOHN,Q',
+                'DAG': '123 MAIN STREET',
+                'DAI': 'ANYTOWN',
+                'DAJ': 'VA',
+                'DAK': '123459999  ',
+                'DAR': 'DM  ',
+                'DAS': '          ',
+                'DAT': '     ',
+                'DAU': '509',
+                'DAW': '175',
+                'DAY': 'BL ',
+                'DAZ': 'BR ',
+                'DBA': '20011201',
+                'DBB': '19761123',
+                'DBC': 'M',
+                'DBD': '19961201'}),
+            ("ZV",{'ZVA': 'JURISDICTIONDEFINEDELEMENT'}))),
+    (
         # AAMVA Version 10
         10,
         "@\n\x1e\rANSI 636000100102DL00410278ZV03190008DLDAQT64235789\n" +
@@ -26,9 +45,38 @@ barcode_testdata = (
         "DDAF\nDDB06062018\nDDC06062020\nDDD1\rZVZVA01\r",
         (636000, 10, 2, 1),
         (("DL", 41, 278), ("ZV", 319, 8)),
-        ()
-    )
-)
+        (
+            ("DL",{
+                'DAQ': 'T64235789',
+                'DCS': 'SAMPLE',
+                'DDE': 'N',
+                'DAC': 'MICHAEL',
+                'DDF': 'N',
+                'DAD': 'JOHN',
+                'DDG': 'N',
+                'DCU': 'JR',
+                'DCA': 'D',
+                'DCB': 'K',
+                'DCD': 'PH',
+                'DBD': '06062019',
+                'DBB': '06061986',
+                'DBA': '12102024',
+                'DBC': '1',
+                'DAU': '068 in',
+                'DAY': 'BRO',
+                'DAG': '2300 WEST BROAD STREET',
+                'DAI': 'RICHMOND',
+                'DAJ': 'VA',
+                'DAK': '232690000  ',
+                'DCF': '2424244747474786102204',
+                'DCG': 'USA',
+                'DCK': '123456789',
+                'DDA': 'F',
+                'DDB': '06062018',
+                'DDC': '06062020',
+                'DDD': '1'}),
+            ("ZV", {'ZVA': '01'}))))
+
 barcode_testdata_ids = tuple(map(lambda v: f"Version {v[0]}", barcode_testdata))
 
 
@@ -127,27 +175,33 @@ class TestParseSubfileDesignatorFunction:
 
 
 class TestParseSubfileFunction:
-    testdata = tuple(map(lambda x: (x[1], x[3]), barcode_testdata))
+    raises_testdata = tuple(map(lambda x: (x[1], x[3]), barcode_testdata))
+    subfile_testdata = tuple(map(lambda x: (x[1], x[3], x[4]), barcode_testdata))
     
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
-    @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
+    @pytest.mark.parametrize("barcode_string, designators", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_subfile_too_short(self, index, barcode_string, designators):
         with pytest.raises(ValueError, match="too short"):
             length = designators[index][1] + designators[index][2] - 1
             barcode.parse_subfile(barcode_string[:length], designators[index])
 
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
-    @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
+    @pytest.mark.parametrize("barcode_string, designators", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_missing_subfile_type(self, index, barcode_string, designators, replace_char_at_index):
         with pytest.raises(ValueError, match="missing subfile type"):
             barcode_string = replace_char_at_index(barcode_string, designators[index][1])
             barcode.parse_subfile(barcode_string, designators[index])
 
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
-    @pytest.mark.parametrize("barcode_string, designators", testdata, ids=barcode_testdata_ids)
+    @pytest.mark.parametrize("barcode_string, designators", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_missing_segment_terminator(self, index, barcode_string, designators, replace_char_at_index):
         with pytest.raises(ValueError, match="missing segment terminator"):
             subfile_end = designators[index][1] + designators[index][2] - 1
             barcode_string = replace_char_at_index(barcode_string, subfile_end)
             barcode.parse_subfile(barcode_string, designators[index])
 
+    @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
+    @pytest.mark.parametrize("barcode_string, designators, subfiles", subfile_testdata, ids=barcode_testdata_ids)
+    def test_should_successfully_return_subfile_tuple(self, index, barcode_string, designators, subfiles):
+        assert barcode.parse_subfile(barcode_string, designators[index]) == subfiles[index]
+        assert barcode.parse_subfile(barcode_string, designators[index]) == barcode.Subfile(*subfiles[index])
