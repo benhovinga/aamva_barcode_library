@@ -1,6 +1,6 @@
 import pytest
 
-import barcode as barcode
+import aamva.barcode as barcode
 
 barcode_testdata = (
     # ((version, barcode_string, header, designators, subfiles), ...)

@@ -1,6 +1,6 @@
 import pytest
 
-import issuing_authority
+import aamva.issuing_authority as issuing_authority
 
 
 @pytest.fixture
