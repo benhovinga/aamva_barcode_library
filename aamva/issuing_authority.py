@@ -83,8 +83,7 @@ ISSUING_AUTHORITIES = (
     IssuingAuthority(636059, "Alaska", "AK", "USA"),
     IssuingAuthority(636060, "Wyoming", "WY", "USA"),
     IssuingAuthority(636061, "West Virginia", "WV", "USA"),
-    IssuingAuthority(636062, "Virgin Islands", "VI", "USA"),
-)
+    IssuingAuthority(636062, "Virgin Islands", "VI", "USA"))
 
 
 def get_authority_by_id(id_number: int) -> IssuingAuthority:
