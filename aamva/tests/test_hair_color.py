@@ -8,7 +8,7 @@ hair_color_testdata = (
     ("BLK", ("BLK", "Black")),
     ("BLN", ("BLN", "Blond")),
     ("BRO", ("BRO", "Brown")),
-    ("BRN", ("BRO", "Brown")),
+    ("BRN", ("BRO", "Brown")),  # Test conversion to BRO
     ("GRY", ("GRY", "Gray")),
     ("RED", ("RED", "Red/Auburn")),
     ("SDY", ("SDY", "Sandy")),

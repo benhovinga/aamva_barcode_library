@@ -7,7 +7,7 @@ eye_color_testdata = (
     ("BLK", ("BLK", "Black", "Black or very dark brown")),
     ("BLU", ("BLU", "Blue", "Blue")),
     ("BRO", ("BRO", "Brown", "Brown, including amber")),
-    ("BRN", ("BRO", "Brown", "Brown, including amber")),
+    ("BRN", ("BRO", "Brown", "Brown, including amber")),  # Test conversion to BRO
     ("DIC", ("DIC", "Dichromatic", "Dichromatic or multicolor, of one or both eyes")),
     ("GRY", ("GRY", "Gray", "Gray")),
     ("GRN", ("GRN", "Green", "Green")),
