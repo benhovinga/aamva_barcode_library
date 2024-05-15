@@ -20,6 +20,7 @@ def fake_authority_list():
 @pytest.mark.parametrize("issuer_id, jurisdiction, abbr, country", issuing_authority_testdata)
 def test_can_get_authority_by_id(fake_authority_list, issuer_id, jurisdiction, abbr, country):
     assert issuing_authority.get_authority_by_id(issuer_id) == (issuer_id, jurisdiction, abbr, country)
+    assert type(issuing_authority.get_authority_by_id(issuer_id)) == issuing_authority.IssuingAuthority
 
 
 def test_should_raise_value_error_when_id_not_found():
