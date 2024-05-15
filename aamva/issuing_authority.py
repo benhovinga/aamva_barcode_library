@@ -1,17 +1,8 @@
-from dataclasses import dataclass
+from typing import NamedTuple
 
 
-class IssuingAuthorityNotFound(Exception):
-    """Raised when Issuing Authority is not found."""
-    def __init__(self, id_number: int):
-        self.id_number = id_number
-        self.message = f"Issuing authority '{id_number}' not found."
-        super().__init__(self.message)
-
-
-@dataclass(frozen=True)
-class IssuingAuthority:
-    issuer_identification_number: int
+class IssuingAuthority(NamedTuple):
+    issuer_id: int
     jurisdiction: str
     abbr: str
     country: str
@@ -97,11 +88,7 @@ ISSUING_AUTHORITIES = (
 
 
 def get_authority_by_id(id_number: int) -> IssuingAuthority:
-    try:
-        issuing_authority = tuple(
-            filter(
-                lambda i: i.issuer_identification_number == id_number,
-                ISSUING_AUTHORITIES))[0]
+    try: 
+        return tuple(filter(lambda i: i.issuer_id == id_number, ISSUING_AUTHORITIES))[0]
     except IndexError:
-        raise IssuingAuthorityNotFound(id_number)
-    return issuing_authority
+        raise ValueError(f"Issuer ID number '{id_number}' not found in authority list.")
