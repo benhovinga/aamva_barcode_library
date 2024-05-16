@@ -6,13 +6,12 @@ IMPERIAL_FORMAT = "%m%d%Y"
 
 def country_date_format(country: str) -> str:
     country = country.upper()
-    match country:
-        case "CANADA":
-            return ISO_FORMAT
-        case "MEXICO":
-            return ISO_FORMAT
-        case "USA":
-            return IMPERIAL_FORMAT
+    if country == "CANADA":
+        return ISO_FORMAT
+    elif country == "MEXICO":
+        return ISO_FORMAT
+    elif country == "USA":
+        return IMPERIAL_FORMAT
     raise ValueError("Provided country is not supported.")
 
 
