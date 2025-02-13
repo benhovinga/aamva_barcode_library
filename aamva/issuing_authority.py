@@ -87,7 +87,7 @@ ISSUING_AUTHORITIES = (
 
 
 def get_authority_by_id(id_number: int) -> IssuingAuthority:
-    try: 
+    try:
         return tuple(filter(lambda i: i.issuer_id == id_number, ISSUING_AUTHORITIES))[0]
     except IndexError:
         raise ValueError(f"Issuer ID number '{id_number}' not found in authority list.")

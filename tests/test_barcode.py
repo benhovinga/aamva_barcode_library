@@ -15,7 +15,7 @@ barcode_testdata = (
         (636000, 1, 2, 0),
         (("DL", 39, 187), ("ZV", 226, 32)),
         (
-            ("DL",{
+            ("DL", {
                 'DAQ': '0123456789ABC',
                 'DAA': 'PUBLIC,JOHN,Q',
                 'DAG': '123 MAIN STREET',
@@ -33,7 +33,7 @@ barcode_testdata = (
                 'DBB': '19761123',
                 'DBC': 'M',
                 'DBD': '19961201'}),
-            ("ZV",{'ZVA': 'JURISDICTIONDEFINEDELEMENT'}))),
+            ("ZV", {'ZVA': 'JURISDICTIONDEFINEDELEMENT'}))),
     (
         # AAMVA Version 10
         10,
@@ -46,7 +46,7 @@ barcode_testdata = (
         (636000, 10, 2, 1),
         (("DL", 41, 278), ("ZV", 319, 8)),
         (
-            ("DL",{
+            ("DL", {
                 'DAQ': 'T64235789',
                 'DCS': 'SAMPLE',
                 'DDE': 'N',
@@ -92,18 +92,17 @@ def replace_char_at_index():
 class TestTrimBeforeFunction:
     def test_should_successfully_trim_everything_before_the_search_character(self):
         assert barcode.trim_before("@", "Before@After") == "@After"
-        
+
     def test_should_work_even_if_not_required(self):
         assert barcode.trim_before("@", "@After") == "@After"
-        
+
     def test_should_not_raise_value_error_when_search_char_not_in_string(self):
         assert barcode.trim_before("@", "It's not here!") == "It's not here!"
 
 
 class TestHeaderLengthFunction:
     @pytest.mark.parametrize("aamva_version, header_length", ((1, 19), (10, 21)), ids=(1, 10))
-    def test_should_return_correct_header_length_for_aamva_version(
-        self, aamva_version, header_length):
+    def test_should_return_correct_header_length_for_aamva_version(self, aamva_version, header_length):
         assert barcode.header_length(aamva_version) == header_length
 
     @pytest.mark.parametrize("aamva_version", (-1, 0, 100))
@@ -115,7 +114,7 @@ class TestHeaderLengthFunction:
 class TestParseFileHeaderFunction:
     raises_testdata = tuple(map(lambda x: (x[0], x[1]), barcode_testdata))
     header_testdata = tuple(map(lambda x: (x[1], x[2]), barcode_testdata))
-    
+
     @pytest.mark.parametrize("_, barcode_string", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_header_is_too_short(self, _, barcode_string):
         with pytest.raises(ValueError, match="too short"):
@@ -156,30 +155,30 @@ class TestParseFileHeaderFunction:
     def test_should_successfully_return_file_header_tuple(self, barcode_string, header):
         test_header = barcode.parse_file_header(barcode_string)
         assert test_header == header
-        assert type(test_header) == barcode.FileHeader
+        assert type(test_header) is barcode.FileHeader
 
 
 class TestParseSubfileDesignatorFunction:
     testdata = tuple(map(lambda x: (x[0], x[1], x[3]), barcode_testdata))
-    
+
     @pytest.mark.parametrize("version, barcode_string, _", testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_designator_too_short(self, version, barcode_string, _):
         length = 28 if version < 2 else 30
         with pytest.raises(ValueError, match="too short"):
             barcode.parse_subfile_designator(barcode_string[:length], version, 0)
-    
+
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile Designator 0", "Subfile Designator 1"))
     @pytest.mark.parametrize("version, barcode_string, designators", testdata, ids=barcode_testdata_ids)
     def test_should_successfully_return_subfile_designator_tuple(self, version, barcode_string, designators, index):
         test_subfile_designator = barcode.parse_subfile_designator(barcode_string, version, index)
         assert test_subfile_designator == designators[index]
-        assert type(test_subfile_designator) == barcode.SubfileDesignator
+        assert type(test_subfile_designator) is barcode.SubfileDesignator
 
 
 class TestParseSubfileFunction:
     raises_testdata = tuple(map(lambda x: (x[1], x[3]), barcode_testdata))
     subfile_testdata = tuple(map(lambda x: (x[1], x[3], x[4]), barcode_testdata))
-    
+
     @pytest.mark.parametrize("index", (0, 1), ids=("Subfile 0", "Subfile 1"))
     @pytest.mark.parametrize("barcode_string, designators", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_subfile_too_short(self, index, barcode_string, designators):
@@ -207,22 +206,22 @@ class TestParseSubfileFunction:
     def test_should_successfully_return_subfile_tuple(self, index, barcode_string, designators, subfiles):
         test_subfile = barcode.parse_subfile(barcode_string, designators[index])
         assert test_subfile == subfiles[index]
-        assert type(test_subfile) == barcode.Subfile
+        assert type(test_subfile) is barcode.Subfile
 
 
 class TestParseBarcodeStringFunction:
     raises_testdata = tuple(map(lambda x: (x[0], x[1]), barcode_testdata))
     file_testdata = tuple(map(lambda x: (x[1], x[2], x[4]), barcode_testdata))
-    
+
     @pytest.mark.parametrize("version, barcode_string", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_number_of_entries_less_than_1(self, version, barcode_string, replace_char_at_index):
         with pytest.raises(ValueError, match="less than 1"):
             char_index = 18 if version < 2 else 20
             barcode_string = replace_char_at_index(barcode_string, char_index, "0")
             barcode.parse_barcode_string(barcode_string)
-    
+
     @pytest.mark.parametrize("barcode_string, header, subfiles", file_testdata, ids=barcode_testdata_ids)
     def test_should_successfully_return_barcode_file_tuple(self, barcode_string, header, subfiles):
         barcode_file = barcode.parse_barcode_string(barcode_string)
         assert barcode_file == (header, subfiles)
-        assert type(barcode_file) == barcode.BarcodeFile
+        assert type(barcode_file) is barcode.BarcodeFile

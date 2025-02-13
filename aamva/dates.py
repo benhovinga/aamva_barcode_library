@@ -18,5 +18,5 @@ def country_date_format(country: str) -> str:
 def parse_date(date_string: str, format: str) -> date:
     try:
         return datetime.strptime(date_string, format).date()
-    except:
+    except ValueError:
         raise ValueError("Invalid date format for provided date string.")

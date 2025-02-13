@@ -32,7 +32,7 @@ class TestParseDateFunction:
     @pytest.mark.parametrize("args, expects", date_testdata, ids=date_testdata_ids)
     def test_should_successfully_return_date_object(self, args, expects):
         assert dates.parse_date(*args) == expects
-    
+
     def test_should_raise_value_error_when_invalid_date_format(self):
         with pytest.raises(ValueError, match="Invalid date format"):
             dates.parse_date("05162024", "%Y%m%d")
