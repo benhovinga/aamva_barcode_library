@@ -15,6 +15,11 @@ def country_date_format(country: str) -> str:
     raise ValueError("Provided country is not supported.")
 
 
+def get_date_format(aamva_version: int, country: str) -> str:
+    # AAMVA Version 3 introduced ISO date format option, prior versions only used Imperial format.
+    return IMPERIAL_FORMAT if aamva_version < 3 else country_date_format(country)
+
+
 def parse_date(date_string: str, format: str) -> date:
     try:
         return datetime.strptime(date_string, format).date()
