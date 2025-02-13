@@ -1,12 +1,14 @@
 # This workflow will install Python dependencies, run tests and lint with multiple versions of Python.
 
-name: Python application
+name: Python Tests
 
 on:
   push:
     branches: ["master", "dev"]
+    paths: ["**.py", "requirements.txt"]
   pull_request:
     branches: ["master", "dev"]
+    paths: ["**.py", "requirements.txt"]
 
 permissions:
   contents: read
