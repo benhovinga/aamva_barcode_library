@@ -41,7 +41,6 @@ Below are some resources that made creating this library possible.
     - A.9.3 Driver Hair Color
     - A.9.8 Driver Race and Ethnicity
 - [List of Issuer Identification Numbers (IIN)](https://www.aamva.org/identity/issuer-identification-numbers-(iin)) (aamva.org) - HTML
-- [Some older standards can be found here](https://docs.scandit.com/parser/dlid.html) (docs.scandit.com) - HTML
 
 ## License
 
