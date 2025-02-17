@@ -6,7 +6,7 @@ from dates import get_date_format
 from issuing_authority import get_authority_by_id
 
 
-def open_barcode_file(barcode_file: BarcodeFile) -> Mapping[str, Union[str, int, date]]:
+def build_profile(barcode_file: BarcodeFile) -> Mapping[str, Union[str, int, date]]:
     aamva_version = barcode_file.header.aamva_version
     issuing_authority = get_authority_by_id(barcode_file.header.issuer_id)
     country = issuing_authority.country
