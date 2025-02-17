@@ -1,4 +1,4 @@
-from typing import NamedTuple, Iterable, Optional, Literal, NewType
+from typing import NamedTuple, Optional, Literal, NewType
 
 BarcodeStr = NewType("BarcodeStr", str)
 
@@ -23,7 +23,7 @@ class Subfile(NamedTuple):
 
 class BarcodeFile(NamedTuple):
     header: FileHeader
-    subfiles: Iterable[Subfile]
+    subfiles: tuple[Subfile, ...]
 
 
 COMPLIANCE_INDICATOR = "@"
