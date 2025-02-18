@@ -1,29 +1,29 @@
-from typing import NamedTuple, Iterable, Optional, Literal, NewType
+from typing import TypedDict, Optional, Literal, NewType
 
 BarcodeStr = NewType("BarcodeStr", str)
 
 
-class FileHeader(NamedTuple):
+class FileHeader(TypedDict):
     issuer_id: int
     aamva_version: int
     number_of_entries: int
     jurisdiction_version: Optional[int] = 0
 
 
-class SubfileDesignator(NamedTuple):
+class SubfileDesignator(TypedDict):
     subfile_type: str
     offset: int
     length: int
 
 
-class Subfile(NamedTuple):
+class Subfile(TypedDict):
     subfile_type: str
     elements: dict[str, str]
 
 
-class BarcodeFile(NamedTuple):
+class BarcodeFile(TypedDict):
     header: FileHeader
-    subfiles: Iterable[Subfile]
+    subfiles: tuple[Subfile, ...]
 
 
 COMPLIANCE_INDICATOR = "@"
@@ -91,11 +91,9 @@ def parse_subfile_designator(barcode_string: BarcodeStr, aamva_version: int, des
 
 
 def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> Subfile:
-    if type(designator) is tuple:
-        designator = SubfileDesignator(*designator)
-    subfile_type = designator.subfile_type
-    offset = designator.offset
-    length = designator.length
+    subfile_type = designator["subfile_type"]
+    offset = designator["offset"]
+    length = designator["length"]
     end_offset = offset + length
 
     if len(barcode_string) < end_offset:
@@ -118,12 +116,12 @@ def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> 
 def parse_barcode_string(barcode_string: BarcodeStr) -> BarcodeFile:
     barcode_string = trim_before(COMPLIANCE_INDICATOR, barcode_string)
     header = parse_file_header(barcode_string)
-    if header.number_of_entries < 1:
+    if header["number_of_entries"] < 1:
         raise ValueError("Number of entries cannot be less than 1.")
 
     subfiles = list()
-    for i in range(header.number_of_entries):
-        designator = parse_subfile_designator(barcode_string, header.aamva_version, i)
+    for i in range(header["number_of_entries"]):
+        designator = parse_subfile_designator(barcode_string, header["aamva_version"], i)
         subfile = parse_subfile(barcode_string, designator)
         subfiles.append(subfile)
 
