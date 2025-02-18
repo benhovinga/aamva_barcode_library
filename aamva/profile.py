@@ -11,3 +11,7 @@ def build_profile(barcode_file: BarcodeFile) -> Mapping[str, Union[str, int, dat
     issuing_authority = get_authority_by_id(barcode_file.header.issuer_id)
     country = issuing_authority.country
     date_format = get_date_format(aamva_version, country)
+
+    for subfile in barcode_file.subfiles:
+        if subfile.subfile_type == "DL" or subfile.subfile_type == "ID":
+            pass
