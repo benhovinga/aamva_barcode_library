@@ -18,7 +18,7 @@ This library isn't intended to "scan" these barcodes, but rather parse the data 
 # Parse the barcode string to extract the subfiles and elements
 
 >>> barcode_file
-# BarcodeFile(header=FileHeader(issuer_id=636000, aamva_version=10, number_of_entries=2, jurisdiction_version=1), subfiles=(Subfile(subfile_type='DL', elements={'DAQ': 'T64235789', 'DCS': 'SAMPLE', 'DDE': 'N', 'DAC': 'MICHAEL', 'DDF': 'N', 'DAD': 'JOHN', 'DDG': 'N', 'DCU': 'JR', 'DCA': 'D', 'DCB': 'K', 'DCD': 'PH', 'DBD': '06062019', 'DBB': '06061986', 'DBA': '12102024', 'DBC': '1', 'DAU': '068 in', 'DAY': 'BRO', 'DAG': '2300 WEST BROAD STREET', 'DAI': 'RICHMOND', 'DAJ': 'VA', 'DAK': '232690000  ', 'DCF': '2424244747474786102204', 'DCG': 'USA', 'DCK': '123456789', 'DDA': 'F', 'DDB': '06062018', 'DDC': '06062020', 'DDD': '1'}), Subfile(subfile_type='ZV', elements={'ZVA': '01'})))
+# {'header': {'issuer_id': 636000, 'aamva_version': 10, 'number_of_entries': 2, 'jurisdiction_version': 1}, 'subfiles': ({'subfile_type': 'DL', 'elements': {'DAQ': 'T64235789', 'DCS': 'SAMPLE', 'DDE': 'N', 'DAC': 'MICHAEL', 'DDF': 'N', 'DAD': 'JOHN', 'DDG': 'N', 'DCU': 'JR', 'DCA': 'D', 'DCB': 'K', 'DCD': 'PH', 'DBD': '06062019', 'DBB': '06061986', 'DBA': '12102024', 'DBC': '1', 'DAU': '068 in', 'DAY': 'BRO', 'DAG': '2300 WEST BROAD STREET', 'DAI': 'RICHMOND', 'DAJ': 'VA', 'DAK': '232690000  ', 'DCF': '2424244747474786102204', 'DCG': 'USA', 'DCK': '123456789', 'DDA': 'F', 'DDB': '06062018', 'DDC': '06062020', 'DDD': '1'}}, {'subfile_type': 'ZV', 'elements': {'ZVA': '01'}})}
 ```
 
 Currently in `v0.5-beta` the library can take the barcode string (captured from a barcode scanning tool) and break it down into it's various file parts. These parts are the file header, subfiles, and subfile elements.
