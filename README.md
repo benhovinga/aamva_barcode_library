@@ -1,8 +1,8 @@
 # AAMVA DL/ID Barcode Library
 
-### Version: v0.5-beta
+### Version: v0.6-beta
 
-*The American Association of Motor Vehicle Administrators* (AAMVA) releases a standards guide for driver license and identification card design. The *[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/topics/driver-license-and-identification-standards)* outlines the specifications for the Mandatory PDF417 Bar Code in Annex D. Nearly all jurisdictions across North America use this standard for their driver license and identification cards.
+_The American Association of Motor Vehicle Administrators_ (AAMVA) releases a standards guide for driver license and identification card design. The _[2020 AAMVA DL/ID Card Design Standard](https://www.aamva.org/topics/driver-license-and-identification-standards)_ outlines the specifications for the Mandatory PDF417 Bar Code in Annex D. Nearly all jurisdictions across North America use this standard for their driver license and identification cards.
 
 This library isn't intended to "scan" these barcodes, but rather parse the data file coming from a barcode scanning tool (like [zxing-cpp](https://pypi.org/project/zxing-cpp/) or [pdf417decoder](https://pypi.org/project/pdf417decoder/)). After it has been parsed and the data elements decoded into human readable properties, the card profile can be displayed to a user or used by other applications.
 
@@ -18,10 +18,10 @@ This library isn't intended to "scan" these barcodes, but rather parse the data 
 # Parse the barcode string to extract the subfiles and elements
 
 >>> barcode_file
-# BarcodeFile(header=FileHeader(issuer_id=636000, aamva_version=10, number_of_entries=2, jurisdiction_version=1), subfiles=(Subfile(subfile_type='DL', elements={'DAQ': 'T64235789', 'DCS': 'SAMPLE', 'DDE': 'N', 'DAC': 'MICHAEL', 'DDF': 'N', 'DAD': 'JOHN', 'DDG': 'N', 'DCU': 'JR', 'DCA': 'D', 'DCB': 'K', 'DCD': 'PH', 'DBD': '06062019', 'DBB': '06061986', 'DBA': '12102024', 'DBC': '1', 'DAU': '068 in', 'DAY': 'BRO', 'DAG': '2300 WEST BROAD STREET', 'DAI': 'RICHMOND', 'DAJ': 'VA', 'DAK': '232690000  ', 'DCF': '2424244747474786102204', 'DCG': 'USA', 'DCK': '123456789', 'DDA': 'F', 'DDB': '06062018', 'DDC': '06062020', 'DDD': '1'}), Subfile(subfile_type='ZV', elements={'ZVA': '01'})))
+# {'header': {'issuer_id': 636000, 'aamva_version': 10, 'number_of_entries': 2, 'jurisdiction_version': 1}, 'subfiles': ({'subfile_type': 'DL', 'elements': {'DAQ': 'T64235789', 'DCS': 'SAMPLE', 'DDE': 'N', 'DAC': 'MICHAEL', 'DDF': 'N', 'DAD': 'JOHN', 'DDG': 'N', 'DCU': 'JR', 'DCA': 'D', 'DCB': 'K', 'DCD': 'PH', 'DBD': '06062019', 'DBB': '06061986', 'DBA': '12102024', 'DBC': '1', 'DAU': '068 in', 'DAY': 'BRO', 'DAG': '2300 WEST BROAD STREET', 'DAI': 'RICHMOND', 'DAJ': 'VA', 'DAK': '232690000  ', 'DCF': '2424244747474786102204', 'DCG': 'USA', 'DCK': '123456789', 'DDA': 'F', 'DDB': '06062018', 'DDC': '06062020', 'DDD': '1'}}, {'subfile_type': 'ZV', 'elements': {'ZVA': '01'}})}
 ```
 
-Currently in `v0.5-beta` the library can take the barcode string (captured from a barcode scanning tool) and break it down into it's various file parts. These parts are the file header, subfiles, and subfile elements.
+Currently in `v0.6-beta` the library can take the barcode string (captured from a barcode scanning tool) and break it down into it's various file parts. These parts are the file header, subfiles, and subfile elements.
 
 The subfile elements are where the profile properties are stored. This is information like first name, last name, birthday, etc. Profile property names like `customer_family_name` are too large for the limited space of the barcode, so all property names have to be encoded with a three letter name, like `DCS`. The AAMVA Standard lists the decoded names for each property in Annex D.
 
@@ -34,19 +34,19 @@ The next step in the development process is to decode each of the subfile elemen
 Below are some resources that made creating this library possible.
 
 - [AAMVA 2020 DL/ID Card Design Standard](https://www.aamva.org/getmedia/99ac7057-0f4d-4461-b0a2-3a5532e1b35c/AAMVA-2020-DLID-Card-Design-Standard.pdf) (aamva.org) - PDF
-    - Annex D - Mandatory PDF417 Bar Code
-    - Note: The encoding schema in Annex I (Optional Comact Encoding) is not yet implemented.
+  - Annex D - Mandatory PDF417 Bar Code
+  - Note: The encoding schema in Annex I (Optional Comact Encoding) is not yet implemented.
 - [AAMVA D20 Data Dictionary 7.0](https://www.aamva.org/getmedia/4373f9e2-468b-4304-b0ee-12d7c867ad7e/D20-Data-Dictionary-7-0.pdf) (aamva.org) - PDF
-    - A.9.2 Driver Eye Color
-    - A.9.3 Driver Hair Color
-    - A.9.8 Driver Race and Ethnicity
-- [List of Issuer Identification Numbers (IIN)](https://www.aamva.org/identity/issuer-identification-numbers-(iin)) (aamva.org) - HTML
+  - A.9.2 Driver Eye Color
+  - A.9.3 Driver Hair Color
+  - A.9.8 Driver Race and Ethnicity
+- [List of Issuer Identification Numbers (IIN)](<https://www.aamva.org/identity/issuer-identification-numbers-(iin)>) (aamva.org) - HTML
 
 ## License
 
 MIT License
 
-Copyright &copy; 2024 Benjamin P.C. Hovinga
+Copyright &copy; 2025 Benjamin P.C. Hovinga
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
