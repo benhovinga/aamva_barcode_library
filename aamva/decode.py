@@ -118,6 +118,9 @@ class Decoder:
             case 2:
                 return "female"
             case 9:
+                if self.aamva_version > 9:  # Introduced in version 9
+                    raise ValueError(
+                        f"Sex value \"9\" is not defined in version {self.aamva_version} of the AAMVA DL/ID spec.")
                 return "not specified"
         raise ValueError("Invalid sex value. Must be 1, 2, or 9")
 
