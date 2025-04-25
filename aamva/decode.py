@@ -5,166 +5,157 @@ PropertyName = str
 PropertyValue = str | int | date | bool
 
 
-def parse_boolean_element(value: str) -> bool:
-    """Parses a boolean element. Element value is either "1" (True) or the element is not set (False)."""
-    if int(value) == 1:
-        return True
-    raise ValueError("Boolean element must have a value of 1 or is not set.")
-
-
-def parse_compliance_type_element(value: str) -> str:
-    """Parses the DHS compliance type code."""
-    match value.upper():
-        case "F":
-            return "compliant"
-        case "N":
-            return "non-compliant"
-    raise ValueError(f"Invalid compliance type given: {value}")
-
-
-def parse_date_element(value: str) -> date:
-    """Parses a date string. Dates can be in YYYYMMDD or MMDDYYYY format."""
-    if len(value) != 8 or not value.isdigit():
-        raise ValueError("Invalid date string format. Must be 8 digits.")
-
-    # If the first 4 digits form a plausible year, assume YYYYMMDD
-    if 1900 <= int(value[:4]):
-        try:
-            return datetime.strptime(value, "%Y%m%d").date()
-        except ValueError:
-            raise ValueError("Invalid date in YYYYMMDD format.")
-    else:
-        # Otherwise, assume MMDDYYYY
-        try:
-            return datetime.strptime(value, "%m%d%Y").date()
-        except ValueError:
-            raise ValueError("Invalid date in MMDDYYYY format.")
-
-
-def parse_eye_color_element(value: str) -> str:
-    """Parses the D20 eye color code."""
-    match value.upper():
-        case "BLK":
-            return "Black or very dark brown"
-        case "BLU":
-            return "Blue"
-        case "BRO" | "BRN":
-            return "Brown, including amber"
-        case "DIC":
-            return "Dichromatic", "Dichromatic or multicolor, of one or both eyes"
-        case "GRY":
-            return "Gray"
-        case "GRN":
-            return "Green"
-        case "HAZ":
-            return "Hazel, a mixture of colors, most commonly green and brown"
-        case "MAR":
-            return "Maroon"
-        case "PNK":
-            return "Pink or albino"
-        case "UNK":
-            return "Unknown"
-    raise ValueError(f"Invalid eye color code: {value}")
-
-
-def parse_hair_color_element(value: str) -> str:
-    """Parses the D20 hair color code."""
-    match value.upper():
-        case "BAL":
-            return "Bald"
-        case "BLK":
-            return "Black"
-        case "BLN":
-            return "Blond"
-        case "BRO" | "BRN":
-            return "Brown"
-        case "GRY":
-            return "Gray"
-        case "RED":
-            return "Red/Auburn"
-        case "SDY":
-            return "Sandy"
-        case "WHI":
-            return "White"
-        case "UNK":
-            return "Uknown"
-    return value
-
-
-def parse_race_ethnicity_element(value: str) -> str:
-    """Parses the D20 race/ethnicity code."""
-    match value.upper():
-        case "AI":
-            return "Alaskan or American Indian"
-        case "AP":
-            return "Asian or Pacific Islander"
-        case "BK":
-            return "Black"
-        case "H":
-            return "Hispanic Origin"
-        case "O":
-            return "Non-hispanic"
-        case "U":
-            return "Unknown"
-        case "W":
-            return "White"
-    raise ValueError(f"Invalid race/ethnicity code: {value}")
-
-
-def parse_sex_element(value: str) -> str:
-    """Parses the sex element."""
-    match int(value):
-        case 1:
-            return "male"
-        case 2:
-            return "female"
-        case 9:
-            return "not specified"
-    raise ValueError("Invalid sex value. Must be 1, 2, or 9")
-
-
-def parse_truncation_element(value: str) -> str:
-    """Parses a truncation code."""
-    match value.upper():
-        case "T":
-            return "has been truncated"
-        case "N":
-            return "has not been truncated"
-        case "U":
-            return "unknown whether truncated"
-    raise ValueError(f"Invalid truncation code: {value}")
-
-
-def parse_weight_range_element(value: str) -> str:
-    """Parses the weight range element."""
-    match int(value):
-        case 0:
-            return "up to 31 kg (up to 70 lbs)"
-        case 1:
-            return "32 - 45 kg (71 - 100 lbs)"
-        case 2:
-            return "46 - 59 kg (101 - 130 lbs)"
-        case 3:
-            return "60 - 70 kg (131 - 160 lbs)"
-        case 4:
-            return "71 - 86 kg (161 - 190 lbs)"
-        case 5:
-            return "87 - 100 kg (191 - 220 lbs)"
-        case 6:
-            return "101 - 113 kg (221 - 250 lbs)"
-        case 7:
-            return "114 - 127 kg (251 - 280 lbs)"
-        case 8:
-            return "128 - 145 kg (281 - 320 lbs)"
-        case 9:
-            return "146+ kg (321+ lbs)"
-    raise ValueError("Invalid weight range value. Must be a number between 0 and 9")
-
-
 class Decoder:
     def __init__(self, aamva_version: int):
         self.aamva_version = aamva_version
         self.validation_errors = []
+
+    def parse_boolean_element(self, value: str) -> bool:
+        """Parses a boolean element. Element value is either "1" (True) or the element is not set (False)."""
+        if int(value) == 1:
+            return True
+        raise ValueError("Boolean element must have a value of 1 or is not set.")
+
+    def parse_compliance_type_element(self, value: str) -> str:
+        """Parses the DHS compliance type code."""
+        match value.upper():
+            case "F":
+                return "compliant"
+            case "N":
+                return "non-compliant"
+        raise ValueError(f"Invalid compliance type given: {value}")
+
+    def parse_date_element(self, value: str) -> date:
+        """Parses a date string. Dates can be in YYYYMMDD or MMDDYYYY format."""
+        if len(value) != 8 or not value.isdigit():
+            raise ValueError("Invalid date string format. Must be 8 digits.")
+
+        # If the first 4 digits form a plausible year, assume YYYYMMDD
+        if 1900 <= int(value[:4]):
+            try:
+                return datetime.strptime(value, "%Y%m%d").date()
+            except ValueError:
+                raise ValueError("Invalid date in YYYYMMDD format.")
+        else:
+            # Otherwise, assume MMDDYYYY
+            try:
+                return datetime.strptime(value, "%m%d%Y").date()
+            except ValueError:
+                raise ValueError("Invalid date in MMDDYYYY format.")
+
+    def parse_eye_color_element(self, value: str) -> str:
+        """Parses the D20 eye color code."""
+        match value.upper():
+            case "BLK":
+                return "Black or very dark brown"
+            case "BLU":
+                return "Blue"
+            case "BRO" | "BRN":
+                return "Brown, including amber"
+            case "DIC":
+                return "Dichromatic", "Dichromatic or multicolor, of one or both eyes"
+            case "GRY":
+                return "Gray"
+            case "GRN":
+                return "Green"
+            case "HAZ":
+                return "Hazel, a mixture of colors, most commonly green and brown"
+            case "MAR":
+                return "Maroon"
+            case "PNK":
+                return "Pink or albino"
+            case "UNK":
+                return "Unknown"
+        raise ValueError(f"Invalid eye color code: {value}")
+
+    def parse_hair_color_element(self, value: str) -> str:
+        """Parses the D20 hair color code."""
+        match value.upper():
+            case "BAL":
+                return "Bald"
+            case "BLK":
+                return "Black"
+            case "BLN":
+                return "Blond"
+            case "BRO" | "BRN":
+                return "Brown"
+            case "GRY":
+                return "Gray"
+            case "RED":
+                return "Red/Auburn"
+            case "SDY":
+                return "Sandy"
+            case "WHI":
+                return "White"
+            case "UNK":
+                return "Uknown"
+        return value
+
+    def parse_race_ethnicity_element(self, value: str) -> str:
+        """Parses the D20 race/ethnicity code."""
+        match value.upper():
+            case "AI":
+                return "Alaskan or American Indian"
+            case "AP":
+                return "Asian or Pacific Islander"
+            case "BK":
+                return "Black"
+            case "H":
+                return "Hispanic Origin"
+            case "O":
+                return "Non-hispanic"
+            case "U":
+                return "Unknown"
+            case "W":
+                return "White"
+        raise ValueError(f"Invalid race/ethnicity code: {value}")
+
+    def parse_sex_element(self, value: str) -> str:
+        """Parses the sex element."""
+        match int(value):
+            case 1:
+                return "male"
+            case 2:
+                return "female"
+            case 9:
+                return "not specified"
+        raise ValueError("Invalid sex value. Must be 1, 2, or 9")
+
+    def parse_truncation_element(self, value: str) -> str:
+        """Parses a truncation code."""
+        match value.upper():
+            case "T":
+                return "has been truncated"
+            case "N":
+                return "has not been truncated"
+            case "U":
+                return "unknown whether truncated"
+        raise ValueError(f"Invalid truncation code: {value}")
+
+    def parse_weight_range_element(self, value: str) -> str:
+        """Parses the weight range element."""
+        match int(value):
+            case 0:
+                return "up to 31 kg (up to 70 lbs)"
+            case 1:
+                return "32 - 45 kg (71 - 100 lbs)"
+            case 2:
+                return "46 - 59 kg (101 - 130 lbs)"
+            case 3:
+                return "60 - 70 kg (131 - 160 lbs)"
+            case 4:
+                return "71 - 86 kg (161 - 190 lbs)"
+            case 5:
+                return "87 - 100 kg (191 - 220 lbs)"
+            case 6:
+                return "101 - 113 kg (221 - 250 lbs)"
+            case 7:
+                return "114 - 127 kg (251 - 280 lbs)"
+            case 8:
+                return "128 - 145 kg (281 - 320 lbs)"
+            case 9:
+                return "146+ kg (321+ lbs)"
+        raise ValueError("Invalid weight range value. Must be a number between 0 and 9")
 
     def decode_single_element(self, id: str, value: str) -> Tuple[PropertyName, PropertyValue]:
         value = value.strip()
@@ -282,29 +273,29 @@ class Decoder:
 
             case "DAY":  # Version 1+
                 if self.aamva_version == 1:
-                    return ("eye_color", parse_eye_color_element(value))
-                return ("physical_description_eye_color", parse_eye_color_element(value))
+                    return ("eye_color", self.parse_eye_color_element(value))
+                return ("physical_description_eye_color", self.parse_eye_color_element(value))
 
             case "DAZ":  # Version 1+
-                return ("hair_color", parse_hair_color_element(value))
+                return ("hair_color", self.parse_hair_color_element(value))
 
             case "DBA":  # Version 1+
                 if self.aamva_version == 1:
-                    return ("driver_license_expiration_date", parse_date_element(value))
-                return ("document_expiration_date", parse_date_element(value))
+                    return ("driver_license_expiration_date", self.parse_date_element(value))
+                return ("document_expiration_date", self.parse_date_element(value))
 
             case "DBB":  # Version 1+
-                return ("date_of_birth", parse_date_element(value))
+                return ("date_of_birth", self.parse_date_element(value))
 
             case "DBC":  # Version 1+
                 if self.aamva_version == 1:
-                    return ("driver_sex", parse_sex_element(value))
-                return ("physical_description_sex", parse_sex_element(value))
+                    return ("driver_sex", self.parse_sex_element(value))
+                return ("physical_description_sex", self.parse_sex_element(value))
 
             case "DBD":  # Version 1+
                 if self.aamva_version == 1:
-                    return ("driver_license_or_id_document_issue_date", parse_date_element(value))
-                return ("document_issue_date", parse_date_element(value))
+                    return ("driver_license_or_id_document_issue_date", self.parse_date_element(value))
+                return ("document_issue_date", self.parse_date_element(value))
 
             case "DBE":  # Version 1
                 if self.aamva_version == 1:
@@ -387,7 +378,7 @@ class Decoder:
 
             case "DCE":  # Version 2+
                 if self.aamva_version >= 2:
-                    return ("physical_description_weight_range", parse_weight_range_element(value))
+                    return ("physical_description_weight_range", self.parse_weight_range_element(value))
 
             case "DCF":  # Version 2+
                 if self.aamva_version >= 2:
@@ -415,7 +406,7 @@ class Decoder:
 
             case "DCL":  # Version 2+
                 if self.aamva_version >= 2:
-                    return ("race_ethnicity", parse_race_ethnicity_element(value))
+                    return ("race_ethnicity", self.parse_race_ethnicity_element(value))
 
             case "DCM":  # Version 2+
                 if self.aamva_version >= 2:
@@ -455,51 +446,51 @@ class Decoder:
 
             case "DDA":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("compliance_type", parse_compliance_type_element(value))
+                    return ("compliance_type", self.parse_compliance_type_element(value))
 
             case "DDB":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("card_revision_date", parse_date_element(value))
+                    return ("card_revision_date", self.parse_date_element(value))
 
             case "DDC":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("hazmat_endorsement_expiration_date", parse_date_element(value))
+                    return ("hazmat_endorsement_expiration_date", self.parse_date_element(value))
 
             case "DDD":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("limited_duration_document_indicator", parse_boolean_element(value))
+                    return ("limited_duration_document_indicator", self.parse_boolean_element(value))
 
             case "DDE":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("family_name_truncation", parse_truncation_element(value))
+                    return ("family_name_truncation", self.parse_truncation_element(value))
 
             case "DDF":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("first_name_truncation", parse_truncation_element(value))
+                    return ("first_name_truncation", self.parse_truncation_element(value))
 
             case "DDG":  # Version 4+
                 if self.aamva_version >= 4:
-                    return ("middle_name_truncation", parse_truncation_element(value))
+                    return ("middle_name_truncation", self.parse_truncation_element(value))
 
             case "DDH":  # Version 5+
                 if self.aamva_version >= 5:
-                    return ("under_18_until", parse_date_element(value))
+                    return ("under_18_until", self.parse_date_element(value))
 
             case "DDH":  # Version 5+
                 if self.aamva_version >= 5:
-                    return ("under_19_until", parse_date_element(value))
+                    return ("under_19_until", self.parse_date_element(value))
 
             case "DDH":  # Version 5+
                 if self.aamva_version >= 5:
-                    return ("under_21_until", parse_date_element(value))
+                    return ("under_21_until", self.parse_date_element(value))
 
             case "DDK":  # Version 6+
                 if self.aamva_version >= 6:
-                    return ("organ_donor_indicator", parse_boolean_element(value))
+                    return ("organ_donor_indicator", self.parse_boolean_element(value))
 
             case "DDL":  # Version 7+
                 if self.aamva_version >= 7:
-                    return ("veteran_indicator", parse_boolean_element(value))
+                    return ("veteran_indicator", self.parse_boolean_element(value))
 
             case "PAA":  # Version 1
                 if self.aamva_version == 1:
