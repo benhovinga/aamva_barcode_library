@@ -1,14 +1,17 @@
 from datetime import datetime, date
-from typing import Tuple
-
-PropertyName = str
-PropertyValue = str | int | date | bool
+from typing import Tuple, NamedTuple
 
 
-class Decoder:
+class Property(NamedTuple):
+    name: str
+    value: str | int | date | bool
+
+
+class DLIDDecoder:
     def __init__(self, aamva_version: int):
+        if aamva_version < 1 or aamva_version > 10:
+            raise ValueError("AAMVA version must be number 1-10.")
         self.aamva_version = aamva_version
-        self.validation_errors = []
 
     def parse_boolean_element(self, value: str) -> bool:
         """Parses a boolean element. Element value is either "1" (True) or the element is not set (False)."""
@@ -53,7 +56,7 @@ class Decoder:
             case "BRO" | "BRN":
                 return "Brown, including amber"
             case "DIC":
-                return "Dichromatic", "Dichromatic or multicolor, of one or both eyes"
+                return "Dichromatic or multicolor, of one or both eyes"
             case "GRY":
                 return "Gray"
             case "GRN":
@@ -88,7 +91,7 @@ class Decoder:
             case "WHI":
                 return "White"
             case "UNK":
-                return "Uknown"
+                return "Unknown"
         return value
 
     def parse_race_ethnicity_element(self, value: str) -> str:
@@ -118,7 +121,7 @@ class Decoder:
             case 2:
                 return "female"
             case 9:
-                if self.aamva_version > 9:  # Introduced in version 9
+                if self.aamva_version < 9:  # Introduced in version 9
                     raise ValueError(
                         f"Sex value \"9\" is not defined in version {self.aamva_version} of the AAMVA DL/ID spec.")
                 return "not specified"
@@ -160,7 +163,7 @@ class Decoder:
                 return "146+ kg (321+ lbs)"
         raise ValueError("Invalid weight range value. Must be a number between 0 and 9")
 
-    def decode_single_element(self, id: str, value: str) -> Tuple[PropertyName, PropertyValue]:
+    def decode_single_element(self, id: str, value: str) -> Property:
         value = value.strip()
         match id.upper():
             case "DAA":  # Version 1
@@ -479,11 +482,11 @@ class Decoder:
                 if self.aamva_version >= 5:
                     return ("under_18_until", self.parse_date_element(value))
 
-            case "DDH":  # Version 5+
+            case "DDI":  # Version 5+
                 if self.aamva_version >= 5:
                     return ("under_19_until", self.parse_date_element(value))
 
-            case "DDH":  # Version 5+
+            case "DDJ":  # Version 5+
                 if self.aamva_version >= 5:
                     return ("under_21_until", self.parse_date_element(value))
 
@@ -497,26 +500,26 @@ class Decoder:
 
             case "PAA":  # Version 1
                 if self.aamva_version == 1:
-                    return ("driver_permit_classification_code")
+                    return ("driver_permit_classification_code", value)
 
             case "PAB":  # Version 1
                 if self.aamva_version == 1:
-                    return ("driver_permit_expiration_date")
+                    return ("driver_permit_expiration_date", value)
 
             case "PAC":  # Version 1
                 if self.aamva_version == 1:
-                    return ("permit_identifier")
+                    return ("permit_identifier", value)
 
             case "PAD":  # Version 1
                 if self.aamva_version == 1:
-                    return ("driver_permit_issue_date")
+                    return ("driver_permit_issue_date", value)
 
             case "PAE":  # Version 1
                 if self.aamva_version == 1:
-                    return ("driver_permit_restriciton_code")
+                    return ("driver_permit_restriction_code", value)
 
             case "PAF":  # Version 1
                 if self.aamva_version == 1:
-                    return ("driver_permit_endorsement_code")
+                    return ("driver_permit_endorsement_code", value)
 
         raise ValueError(f"Element ID \"{id}\" is not defined in version {self.aamva_version} of the AAMVA DL/ID spec.")
