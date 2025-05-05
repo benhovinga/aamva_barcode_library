@@ -1,5 +1,7 @@
 from datetime import datetime, date
-from typing import Tuple, NamedTuple
+from typing import NamedTuple
+
+from .barcode import Subfile
 
 
 class Property(NamedTuple):
@@ -523,3 +525,15 @@ class DLIDDecoder:
                     return ("driver_permit_endorsement_code", value)
 
         raise ValueError(f"Element ID \"{id}\" is not defined in version {self.aamva_version} of the AAMVA DL/ID spec.")
+
+    # TODO: Is not rubust yet
+    def decode_subfile(self, subfile: Subfile) -> dict:
+        if subfile["subfile_type"] not in ("DL", "ID"):
+            raise ValueError("Unsupported subfile type")
+
+        profile = {}
+        for key, value in subfile["elements"].items():
+            prop = self.decode_single_element(key, value)
+            profile[prop[0]] = prop[1]
+
+        return profile

@@ -332,3 +332,23 @@ class TestDecodeSingleElementMethod:
     def test_should_raise_value_error_when_given_invalid_id(self):
         with pytest.raises(ValueError, match="not defined in version"):
             dlid.DLIDDecoder(1).decode_single_element("NNN", "")
+
+
+# TODO: Create tests for each version
+class TestDecodeSubfileMethod:
+    def test_should_return_a_profile_dict(self):
+        assert dlid.DLIDDecoder(10).decode_subfile({
+            "subfile_type": "DL",
+            "elements": {
+                "DAC": "John",
+                "DAD": "Middle",
+                "DCS": "Smith"
+            }
+        })  # TODO: Evaluate this against something
+
+    def test_should_raise_value_error_when_given_wrong_subfile_type(self):
+        with pytest.raises(ValueError, match="Unsupported subfile type"):
+            dlid.DLIDDecoder(10).decode_subfile({
+                "subfile_type": "AA",
+                "elements": {"AAA": "BAD VALUE"}
+            })
