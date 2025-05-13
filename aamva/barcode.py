@@ -1,13 +1,13 @@
-from typing import TypedDict, Optional, Literal, NewType
+from typing import TypedDict, Literal, NewType
 
-BarcodeStr = NewType("BarcodeStr", str)
+BarcodeString = NewType("BarcodeString", str)
 
 
 class FileHeader(TypedDict):
     issuer_id: int
     aamva_version: int
     number_of_entries: int
-    jurisdiction_version: Optional[int] = 0
+    jurisdiction_version: int
 
 
 class SubfileDesignator(TypedDict):
@@ -23,7 +23,7 @@ class Subfile(TypedDict):
 
 class BarcodeFile(TypedDict):
     header: FileHeader
-    subfiles: tuple[Subfile, ...]
+    subfiles: list[Subfile]
 
 
 COMPLIANCE_INDICATOR = "@"
@@ -33,20 +33,20 @@ SEGMENT_TERMINATOR = "\r"
 FILE_TYPE = "ANSI "
 
 
-def trim_before(char: str, string: str) -> str:
+def trim_before(character: str, string: str) -> str:
     try:
-        return string[string.index(char):]
+        return string[string.index(character):]
     except ValueError:
         return string
 
 
-def header_length(aamva_version: int) -> Literal[19, 21]:
+def get_header_length(aamva_version: int) -> Literal[19, 21]:
     if aamva_version < 1 or aamva_version > 99:
         raise ValueError("aamva_version is out of range (1-99).")
-    return 19 if aamva_version < 2 else 21
+    return 19 if aamva_version == 1 else 21
 
 
-def parse_file_header(barcode_string: BarcodeStr) -> FileHeader:
+def parse_file_header(barcode_string: BarcodeString) -> FileHeader:
     MIN_LENGTH = 17
 
     if len(barcode_string) < MIN_LENGTH:
@@ -63,12 +63,12 @@ def parse_file_header(barcode_string: BarcodeStr) -> FileHeader:
         raise ValueError("Header element 'FILE_TYPE' is invalid.")
 
     aamva_version = int(barcode_string[15:17])
-    if len(barcode_string) < header_length(aamva_version):
+    if len(barcode_string) < get_header_length(aamva_version):
         raise ValueError("Header length is too short.")
 
     issuer_id = int(barcode_string[9:15])
-    number_of_entries = int(barcode_string[17:19] if aamva_version < 2 else barcode_string[19:21])
-    jurisdiction_version = 0 if aamva_version < 2 else int(barcode_string[17:19])
+    number_of_entries = int(barcode_string[17:19] if aamva_version == 1 else barcode_string[19:21])
+    jurisdiction_version = 0 if aamva_version == 1 else int(barcode_string[17:19])
 
     return FileHeader(
         issuer_id=issuer_id,
@@ -77,9 +77,9 @@ def parse_file_header(barcode_string: BarcodeStr) -> FileHeader:
         jurisdiction_version=jurisdiction_version)
 
 
-def parse_subfile_designator(barcode_string: BarcodeStr, aamva_version: int, designator_index: int) -> SubfileDesignator:
+def parse_subfile_designator(barcode_string: BarcodeString, aamva_version: int, designator_index: int) -> SubfileDesignator:
     DESIGNATOR_LENGTH = 10
-    cursor = designator_index * DESIGNATOR_LENGTH + header_length(aamva_version)
+    cursor = designator_index * DESIGNATOR_LENGTH + get_header_length(aamva_version)
 
     if len(barcode_string) < cursor + DESIGNATOR_LENGTH:
         raise ValueError("Subfile designator is too short.")
@@ -90,7 +90,7 @@ def parse_subfile_designator(barcode_string: BarcodeStr, aamva_version: int, des
         length=int(barcode_string[cursor + 6:cursor + 10]))
 
 
-def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> Subfile:
+def parse_subfile(barcode_string: BarcodeString, designator: SubfileDesignator) -> Subfile:
     subfile_type = designator["subfile_type"]
     offset = designator["offset"]
     length = designator["length"]
@@ -113,13 +113,13 @@ def parse_subfile(barcode_string: BarcodeStr, designator: SubfileDesignator) -> 
         elements=elements)
 
 
-def parse_barcode_string(barcode_string: BarcodeStr) -> BarcodeFile:
+def parse_barcode_string(barcode_string: BarcodeString) -> BarcodeFile:
     barcode_string = trim_before(COMPLIANCE_INDICATOR, barcode_string)
     header = parse_file_header(barcode_string)
     if header["number_of_entries"] < 1:
         raise ValueError("Number of entries cannot be less than 1.")
 
-    subfiles = list()
+    subfiles: list[Subfile] = []
     for i in range(header["number_of_entries"]):
         designator = parse_subfile_designator(barcode_string, header["aamva_version"], i)
         subfile = parse_subfile(barcode_string, designator)
@@ -127,4 +127,4 @@ def parse_barcode_string(barcode_string: BarcodeStr) -> BarcodeFile:
 
     return BarcodeFile(
         header=header,
-        subfiles=tuple(subfiles))
+        subfiles=subfiles)

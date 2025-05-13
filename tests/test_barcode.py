@@ -17,7 +17,7 @@ barcode_testdata = (
             "aamva_version": 1,
             "number_of_entries": 2,
             "jurisdiction_version": 0},
-        (
+        [
             {
                 "subfile_type": "DL",
                 "offset": 39,
@@ -25,8 +25,8 @@ barcode_testdata = (
             {
                 "subfile_type": "ZV",
                 "offset": 226,
-                "length": 32}),
-        (
+                "length": 32}],
+        [
             {
                 "subfile_type": "DL",
                 "elements": {
@@ -49,7 +49,7 @@ barcode_testdata = (
                     'DBD': '19961201'}},
             {
                 "subfile_type": "ZV",
-                "elements": {'ZVA': 'JURISDICTIONDEFINEDELEMENT'}})),
+                "elements": {'ZVA': 'JURISDICTIONDEFINEDELEMENT'}}]),
     (
         # AAMVA Version 10
         10,
@@ -64,7 +64,7 @@ barcode_testdata = (
             "aamva_version": 10,
             "number_of_entries": 2,
             "jurisdiction_version": 1},
-        (
+        [
             {
                 "subfile_type": "DL",
                 "offset": 41,
@@ -72,8 +72,8 @@ barcode_testdata = (
             {
                 "subfile_type": "ZV",
                 "offset": 319,
-                "length": 8}),
-        (
+                "length": 8}],
+        [
             {
                 "subfile_type": "DL",
                 "elements": {
@@ -107,7 +107,7 @@ barcode_testdata = (
                     'DDD': '1'}},
             {
                 "subfile_type": "ZV",
-                "elements": {'ZVA': '01'}})))
+                "elements": {'ZVA': '01'}}]))
 
 barcode_testdata_ids = tuple(map(lambda v: f"Version {v[0]}", barcode_testdata))
 
@@ -135,12 +135,12 @@ class TestTrimBeforeFunction:
 class TestHeaderLengthFunction:
     @pytest.mark.parametrize("aamva_version, header_length", ((1, 19), (10, 21)), ids=(1, 10))
     def test_should_return_correct_header_length_for_aamva_version(self, aamva_version, header_length):
-        assert barcode.header_length(aamva_version) == header_length
+        assert barcode.get_header_length(aamva_version) == header_length
 
     @pytest.mark.parametrize("aamva_version", (-1, 0, 100))
     def test_should_raise_value_error_when_aamva_version_out_of_range(self, aamva_version):
         with pytest.raises(ValueError, match="out of range"):
-            barcode.header_length(aamva_version)
+            barcode.get_header_length(aamva_version)
 
 
 class TestParseFileHeaderFunction:
@@ -179,7 +179,7 @@ class TestParseFileHeaderFunction:
 
     @pytest.mark.parametrize("version, barcode_string", raises_testdata, ids=barcode_testdata_ids)
     def test_should_raise_value_error_when_header_is_too_short_for_version(self, version, barcode_string):
-        length = barcode.header_length(version)
+        length = barcode.get_header_length(version)
         with pytest.raises(ValueError, match="too short"):
             barcode.parse_file_header(barcode_string[:length - 1])
 
