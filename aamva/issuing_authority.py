@@ -48,7 +48,7 @@ ISSUING_AUTHORITIES = (
     IssuingAuthority(636024, "Vermont", "VT", "USA"),
     IssuingAuthority(636025, "Pennsylvania", "PA", "USA"),
     IssuingAuthority(636026, "Arizona", "AZ", "USA"),
-    IssuingAuthority(636027, "State Dept. (Diplomatic)", None, "USA"),
+    IssuingAuthority(636027, "State Dept. (Diplomatic)", "", "USA"),
     IssuingAuthority(636028, "British Columbia", "BC", "Canada"),
     IssuingAuthority(636029, "Oregon", "OR", "USA"),
     IssuingAuthority(636030, "Missouri", "MO", "USA"),
